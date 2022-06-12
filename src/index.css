@@ -1,13 +1,117 @@
-body {
+@import url('general-sans.css');
+
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.mm{
+  margin: 80px;
+}
+
+.mtm{
+  margin-top: 80px;
+}
+
+.mbm {
+  margin-bottom: 80px;
+}
+
+.mlm{
+  margin-left: 80px;
+}
+
+.mrm{
+  margin-right: 80px;
+}
+
+body {
+  font-family: 'GeneralSans-Regular', sans-serif !important;
+}
+
+.nav-item{
+  margin-top: 27px;
+}
+nav>.nav>:nth-child(1){
+  margin-top: 23px !important;
+  margin-left: 4%;
+}
+nav>.nav>:last-child{
+  margin-left: auto;
+  margin-right: 5%;
+}
+.nav-link  {
+  color: #4F4F4F !important;
+  text-decoration: none;
+}
+.footer-link{
+  text-decoration: none;
+}
+
+.footer{
+  height: 200px;
+}
+.copyright{
+  position: absolute;
+  bottom: 40%;
+  left: 30%;
+}
+
+.about-academy{
+  background: linear-gradient(132.72deg, #C6C6F4 24.92%, #FFFFFF 50.61%);
+}
+.about-academy> .description{
+  margin: 252px auto auto 80px;
+}
+.text-gradient {  
+  background-image: linear-gradient(117.94deg, #EA5476 45.58%, #485EFA 65.45%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent; 
+}
+.description>h1{  
+  font-family: 'GeneralSans-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 140%;
+}
+.about-cover-img {
+  width: 740px;
+  height: 756px;
+  margin: 122px 80px;
+}
+
+.about-aelf h1{
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 140%
+}
+
+.aelf-logo {
+  width: 310px;
+  height: 301px;
+}
+
+.about-aelf-btn{
+  margin-left: auto ;
+}
+
+.faq-item{
+  border-style: solid !important;
+  border-width: 3px !important;
+  border-color: #C5C5F4 !important;
+  margin-bottom: 10px !important;
+  border-radius: 0% !important;
+}
+
+@media screen and (max-width: 650px) {
+  nav>.nav>:nth-child(1){
+    margin-top: 23px !important;
+    margin-left: 1%;
+  }
+  nav>.nav>:last-child{
+    margin-left: auto;
+    margin-right: 1%;
+  }
 }
