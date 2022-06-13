@@ -1,7 +1,7 @@
-import React from 'react'
+import {useState} from 'react'
 import Accordion from 'react-bootstrap/Accordion'
 
-const faqs = [
+const faqList = [
     {
         id: 1,
         question: 'What is AElf',
@@ -35,6 +35,7 @@ const faqs = [
 ]
 
 const Faq = () => {
+    const [faqs, setFaqs] = useState(faqList)
   return (
     <>
         {
