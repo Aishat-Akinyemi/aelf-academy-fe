@@ -25,7 +25,7 @@ const Coursedetails = () => {
     };
 
   return (
-        <div className='container mm'>
+        <div className='contain mm'>
             <header>
                 <h2>{course.title}</h2>
                 <div>{course.introduction}</div>
@@ -40,7 +40,7 @@ const Coursedetails = () => {
                     <hr className='my-5'/>
                     <div className="d-flex flex-column">
                         <p style={{width :"max-content"}}>Well done! You’ve completed the course {course.title}. Take the challenge to earn {course.submissionReward} ELF</p>
-                        <Button variant="outline-primary"  className="mt-3 align-self-end" style={{width :"max-content"}}>Attempt Challenge</Button>
+                        <Button variant="outline-primary"  className="mt-3 align-self-end" style={{width :"max-content"}}>View Quest</Button>
                     </div>
                 </Col>
             </Row>

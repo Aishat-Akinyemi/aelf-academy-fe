@@ -28,6 +28,7 @@
 
 body {
   font-family: 'GeneralSans-Regular', sans-serif !important;
+  
 }
 
 button, .button{
@@ -35,6 +36,7 @@ button, .button{
   font-weight: 500;
   line-height: 150%;
   border-radius: 10px !important;
+  min-width: 90px;
 }
 .sm-txt {
   font-size: 12px;
@@ -154,20 +156,25 @@ nav>.nav>:last-child{
 .courses-container{
   /* background: linear-gradient(195.67deg, rgba(234, 84, 118, 0.49) 10.95%, rgba(66, 185, 236, 0.12) 91.29%);
    */
-  background:  linear-gradient(220deg, rgb(234 84 118 / 85%) 10.95%, rgba(66, 185, 236, 0.12) 91.29%)
+  background:  linear-gradient(220deg, rgb(234 84 118 / 85%) 10.95%, rgba(66, 185, 236, 0.12) 91.29%);
 }
 .courses-container> header {
   padding: 150px 80px 80px 80px;
 }
+.contain {
+  min-height: 45vh;
+  /* background:  linear-gradient(220deg, rgb(234 84 118 / 85%) 10.95%, rgba(66, 185, 236, 0.12) 91.29%); */
+  /* padding: 150px 80px 80px 80px; */
 
-.container h2{
+}
+.contain > header >h2{
   font-family: 'GeneralSans-Bold' !important;
   font-weight: bolder;
   font-size: 42px;
   line-height: 140%;
 }
 
-.container> header p {
+.contain> header p {
   font-family: 'GeneralSans-Regular' !important;
   color: #4F4F4F;
   font-weight: 500;
@@ -190,22 +197,6 @@ nav>.nav>:last-child{
   /* margin-bottom: 20px;   */
 }
 
-/* .courses-container > .courses-page-title ,  .course-detail-container h2{
-  font-family: 'GeneralSans-Bold' !important;
-  font-weight: bolder;
-  font-size: 42px;
-  line-height: 140%;
-}
-
-.courses-container > p,  .course-detail-container>header> p {
-  font-family: 'GeneralSans-Regular' !important;
-  color: #4F4F4F;
-  font-weight: 500;
-  font-size:medium;
-  line-height: 150%; 
-  /* margin-bottom: 20px;   */
-/* }  */
-
 /* Coursedetail view */
 
 .course-content {
@@ -213,6 +204,13 @@ nav>.nav>:last-child{
   font-size:16px;
 }
 
+a {
+  text-decoration: none !important;
+}
+
+.in-line{
+  display: inline-block;
+}
 
 /* MEDIA QUERIES */
 @media screen and (max-width: 650px) {

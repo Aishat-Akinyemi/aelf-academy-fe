@@ -11,6 +11,7 @@ function environment(env) {
           explorerUrl: "https://explorer.aelf.io/",
           defaultPrivateKey: DEFAULT_PRIV_KEY,
           contractName: "Aelf Academy",
+          // tokenContractName: 'AElf.ContractNames.Token',
           tokenContractName: 'AElf.ContractNames.Token',
           address: {
             prefix: 'ELF',

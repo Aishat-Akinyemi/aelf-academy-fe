@@ -1,6 +1,6 @@
 import environment from './config';
 
-const aelfEnv = environment("local");
+const aelfEnv = environment("tdvw");
 const defaultPrivateKey = aelfEnv.defaultPrivateKey;
 const endpoint = aelfEnv.nodeUrl;
 

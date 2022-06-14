@@ -1,9 +1,10 @@
 import { Button,Stack } from 'react-bootstrap';
 import {useState} from 'react'
 
-const Quest = ({}) => {
+const Quest = ({userRole}) => {
+    const role = userRole;
     const [quest, setQuest] = useState({
-      courseTitle: "Getting Started with AElf",
+      courseTitle: "Aelf 101: Getting Started with AElf",
       submissionReward: 50,
       moderationReward: 20,
       instructions: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat maxime quas ipsam eius explicabo iure quia natus! Doloribus maxime ad numquam est odit eos, assumenda temporibus, facilis culpa ullam dolorem?
@@ -13,7 +14,7 @@ const Quest = ({}) => {
     });
 
   return (
-        <div className='container mm'>
+        <div className='contain mm'>
             <header>
                 <h2>Quest: {quest.courseTitle}</h2>
                 <Stack direction="horizontal" gap={4} className="my-4">
@@ -26,7 +27,7 @@ const Quest = ({}) => {
             </div>
             <Stack direction="horizontal" gap={3} className="col-6 mx-auto justify-content-around"> 
                 <Button variant="outline-primary">Go back to course</Button>
-                <Button variant="primary" className=''>Submit Challenge</Button>
+                <Button variant="primary">{role === 'Learner'? `Submit Entry`: `Moderate Submissions`}</Button>
             </Stack>
 
         </div>
