@@ -152,7 +152,7 @@ const courseList =     [
         Level : 2,
         ContentUrl : '',
         IsActive : true,
-        CourseTitle: 'AELF 201: Say Hello World! with your first Aelf Smartcontract.'
+        CourseTitle: 'AELF 201: Aelf Architecture'
     },
     {
         CourseId : 3,
@@ -161,7 +161,7 @@ const courseList =     [
         Level : 3,
         ContentUrl : '',
         IsActive : true,
-        CourseTitle: 'AELF 301'
+        CourseTitle: 'AELF 301: Build and deploy Hello World smart contract'
     },
     {
         CourseId : 4,
@@ -170,7 +170,7 @@ const courseList =     [
         Level : 4,
         ContentUrl : '',
         IsActive : true,
-        CourseTitle: 'AELF 401'
+        CourseTitle: 'AELF 401: Advanced smart contract development'
     },
     {
         CourseId : 5,
@@ -179,7 +179,7 @@ const courseList =     [
         Level : 5,
         ContentUrl : '',
         IsActive : true,
-        CourseTitle: 'AELF 501'
+        CourseTitle: 'AELF 501: Integrate smartcontract with Frontend'
     },
     {
         CourseId : 6,
@@ -188,6 +188,6 @@ const courseList =     [
         Level : 6,
         ContentUrl : '',
         IsActive : true,
-        CourseTitle: 'AELF 601',
+        CourseTitle: 'AELF 601: Smart contract security and optimisation',
     }       
 ]

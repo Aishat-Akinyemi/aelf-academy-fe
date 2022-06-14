@@ -2,6 +2,7 @@ import {useState} from 'react'
 import logo from '../assets/img/logo.svg'
 import { Button, Badge } from "react-bootstrap";
 import {InitializeContract1} from '../utils/Aelf';
+import {Link, useNavigate} from 'react-router-dom';
 
 const Header = () => {
     const [userInfo, setUserInfo] = useState( {
@@ -10,6 +11,7 @@ const Header = () => {
         Level: 1,
         Reward: 500
     });
+    let navigate = useNavigate();
 //    const initContract = () => {
 //         InitializeContract1();
 //    }
@@ -21,26 +23,29 @@ const Header = () => {
     <nav className='nav-bar'>
         <ul className="nav">
             <li className="nav-item">                
-                <a className="nav-link active" href="#">
+                <Link className="nav-link active" to="/home">
                     <img src={logo} 
                     style={{width: "88px", height:"44px"}}              
                      />
-                </a>
+                </Link>
             </li>
             <li className="nav-item">
-                <a className="nav-link" href="#">Courses</a>
+                <Link className="nav-link" to="/courses">Courses</Link>
             </li>
             <li className="nav-item">
-                <a className="nav-link" href="#">FAQs</a>
+                <Link className="nav-link" to="/home">FAQs</Link>
             </li>
             <li className="nav-item">
-                <a className="nav-link" href="#">Discord</a>
+                <a className="nav-link" href="aishatakinyemi.com" target="_blank" rel="noopener noreferrer">Discord</a>
             </li>
             <li className="nav-item">
-                <a className="nav-link" href="#">English</a>
+                <a className="nav-link btn" href="#">English</a>
             </li>
             <li className="nav-item">
-             <Button variant="outline-primary" onClick={goToAccount}>
+             <Button variant="outline-primary" onClick={()=> {
+                        navigate("/account");
+                    }}
+                >
                 {userInfo.Username} 
                 <Badge className='ms-2'>{userInfo.Reward}</Badge>
                 </Button>

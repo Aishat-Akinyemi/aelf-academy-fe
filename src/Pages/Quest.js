@@ -26,8 +26,8 @@ const Quest = ({userRole}) => {
                 {quest.instructions}
             </div>
             <Stack direction="horizontal" gap={3} className="col-6 mx-auto justify-content-around"> 
-                <Button variant="outline-primary">Go back to course</Button>
-                <Button variant="primary">{role === 'Learner'? `Submit Entry`: `Moderate Submissions`}</Button>
+                <Button variant="outline-primary">Go back to Course</Button>
+                <Button variant="primary">{role === 'Learner'? `Submit Entry`: `Review Entries`}</Button>
             </Stack>
 
         </div>

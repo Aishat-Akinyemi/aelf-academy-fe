@@ -36,7 +36,7 @@ button, .button{
   font-weight: 500;
   line-height: 150%;
   border-radius: 10px !important;
-  min-width: 90px;
+  min-width: 100px;
 }
 .sm-txt {
   font-size: 12px;
@@ -222,6 +222,7 @@ a {
     margin-left: auto;
     margin-right: 1%;
   }
+
 }
 
 .nav-bar {

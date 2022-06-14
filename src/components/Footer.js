@@ -15,15 +15,15 @@ const Footer = () => {
             </div>
             
             <div className='d-flex flex-column'>
-                <a href="" className='mt-3 footer-link'>Developer Tools</a>
-                <a href="" className='mt-3 footer-link'>Aelf Discord</a>
-                <a href="" className='mt-3 footer-link'>Aelf Boilerplate</a>
+                <a href="https://docs.aelf.io/en/latest/" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Developer Tools</a>
+                <a href="https://discord.gg/fSehjRpc" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Aelf Discord</a>
+                <a href="https://github.com/aelfProject" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Aelf Github</a>
             </div>
         
             <div className='d-flex flex-column'>
-                <a href="" className='mt-3 footer-link'>Aelf Developer Center</a>
-                <a href="" className='mt-3 footer-link'>Aelf Academy Discord</a>
-                <a href="" className='mt-3 footer-link'>AelfBoilerplate Documentation</a>
+                <a href="https://aelf.com/develop.html" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Aelf Developer Center</a>
+                <a href="" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Aelf Academy Discord</a>
+                <a href="https://aelf-boilerplate-docs.readthedocs.io/en/latest/overview/setup.html" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">AelfBoilerplate Documentation</a>
                
             </div>
       
