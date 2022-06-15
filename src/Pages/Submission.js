@@ -46,9 +46,10 @@ const Submission = ({/**courseId, learnerAdd, role*/}) => {
                                             e.preventDefault();
                                             setShowSubmissionSuccess(!showSubmissionSuccess);
                                             const sub = {
-                                                submissionUrl:'',
+                                                submissionUrl:currentSubmissionInput,
                                                 isApproved : false
                                             }
+                                            setCurrentSubmissionInput('');
                                             setSubmissionList([...submissionList, sub]);
                                             
                                         }}

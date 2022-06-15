@@ -34,7 +34,7 @@ const userList = [
 ]
 
 function App() {
-  const [user, setUser] = useState(userList[0]);
+  const [user, setUser] = useState(userList[2]);
   return (
     <Router>
         <Header user={user}/>
