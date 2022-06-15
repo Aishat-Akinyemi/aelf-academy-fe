@@ -1,13 +1,8 @@
 import React, {useState} from 'react'
 import { Button, Stack,  Form, Card,  Accordion, Badge} from 'react-bootstrap';
 
-const Account = () => {
-    const [userInfo, setUserInfo] = useState( {
-        Username: 'Kate',
-        Role: 'Learner',
-        Level: 1,
-        Reward: 50000000
-      });
+const Account = ({user}) => {
+    const [userInfo, setUserInfo] = useState(user);
     const [submissionList, setSubmissionList] = useState(learnerSubmissionList);
     const [courses, setCourses]  =useState(courseList);
 

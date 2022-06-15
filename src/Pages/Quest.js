@@ -1,8 +1,12 @@
 import { Button,Stack } from 'react-bootstrap';
-import {useState} from 'react'
+import {useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 
 const Quest = ({userRole}) => {
-    const role = userRole;
+    let navigate = useNavigate();
+    const role = "Learner";
+    // const role = userRole;
+    const {courseId } = useParams();
     const [quest, setQuest] = useState({
       courseTitle: "Aelf 101: Getting Started with AElf",
       submissionReward: 50,
@@ -26,8 +30,16 @@ const Quest = ({userRole}) => {
                 {quest.instructions}
             </div>
             <Stack direction="horizontal" gap={3} className="col-6 mx-auto justify-content-around"> 
-                <Button variant="outline-primary">Go back to Course</Button>
-                <Button variant="primary">{role === 'Learner'? `Submit Entry`: `Review Entries`}</Button>
+                <Button variant="outline-primary"
+                onClick={() => {
+                  navigate(`/course/${courseId}`);
+                  }}
+                >Go back to Course</Button>
+                <Button variant="primary"
+                  onClick={() => {
+                    navigate(`/entries/${courseId}`);
+                    }}
+                >{role === 'Learner'? `Submit Entry`: `Review Entries`}</Button>
             </Stack>
 
         </div>

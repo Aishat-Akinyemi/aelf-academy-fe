@@ -4,13 +4,8 @@ import { Button, Badge } from "react-bootstrap";
 import {InitializeContract1} from '../utils/Aelf';
 import {Link, useNavigate} from 'react-router-dom';
 
-const Header = () => {
-    const [userInfo, setUserInfo] = useState( {
-        Username: 'Kate',
-        Role: 'Learner',
-        Level: 1,
-        Reward: 500
-    });
+const Header = ({user}) => {
+    const [userInfo, setUserInfo] = useState(user);
     let navigate = useNavigate();
 //    const initContract = () => {
 //         InitializeContract1();

@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import {Row, Col, Button} from 'react-bootstrap'
 import TableOfContent from '../components/TableOfContent';
+import {useNavigate} from 'react-router-dom';
 
 const Coursedetails = () => {
+    let navigate = useNavigate();
     const [course, setCourse] = useState({
         courseId:1,
         submissionReward: 50,
@@ -38,7 +40,11 @@ const Coursedetails = () => {
                     <hr className='my-5'/>
                     <div className="d-flex flex-column">
                         <p style={{width :"max-content"}}>Well done! You’ve completed {course.title} course. Take the challenge to earn {course.submissionReward} ELF</p>
-                        <Button variant="outline-primary"  className="mt-3 align-self-end" style={{width :"max-content"}}>View Quest</Button>
+                        <Button variant="outline-primary"  className="mt-3 align-self-end" style={{width :"max-content"}}
+                        onClick={() => {
+                            navigate(`/quest/${course.courseId}`);
+                            }}                        
+                        >View Quest</Button>
                     </div>
                 </Col>
             </Row>

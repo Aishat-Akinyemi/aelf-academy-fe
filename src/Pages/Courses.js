@@ -60,7 +60,7 @@ const courseList =     [
             level : 6,
             contentUrl : '',
             isActive : true,
-            introduction: 'This course aims to help you ',
+            introduction: 'This course aims to teach you how to develop highly secure and performant smart contracts on the Aelf blockchain.',
             courseTitle: 'AELF 601: Smart contract security and optimisation',
         }       
 ]

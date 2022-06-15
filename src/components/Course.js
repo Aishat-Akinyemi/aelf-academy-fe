@@ -1,7 +1,7 @@
 import { Card, Button, Col } from 'react-bootstrap'
 import Proptypes, { object } from 'prop-types';
 import {PerformACall} from '../utils/Aelf'
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 
 
 const Course = ({ course}) => {
@@ -10,7 +10,7 @@ const Course = ({ course}) => {
   return (
     <Col>
         <Card className="course-card h-100">
-            <Card.Body className='ml-3 mt-3 mb-5'>
+            <Card.Body className='ml-3 mt-3 mb-5 position-relative'>
                 <Card.Title className="course-header mb-3">{course.courseTitle}</Card.Title>
                 <Card.Subtitle className='d-flex justify-content-between course-details'>
                     <span 
@@ -23,11 +23,14 @@ const Course = ({ course}) => {
                 <Card.Text className='mt-3 mb-5 pr-3'>
                    {course.introduction}
                 </Card.Text>
-                <Button variant="outline-primary"><span className='p-3' onClick={() => {
-                    navigate(`/course/1`);
-                }}
-                >
-                Start Now</span></Button>  <a href="" className='sm-txt p-5'>Moderate submission</a>
+                <span className='position-absolute' style={{bottom: "-5px"}}>
+                    <Button variant="outline-primary" ><span className='p-3' onClick={() => {
+                    navigate(`/course/${course.courseId}`);
+                    }}
+                    >
+                    Start Now</span></Button>  
+                    
+                    <Link to={`/quest/${course.courseId}`} className='sm-txt p-5'>Evaluate submissions</Link></span>
             </Card.Body>
         </Card>
     </Col>
