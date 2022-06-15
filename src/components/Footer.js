@@ -22,7 +22,7 @@ const Footer = () => {
         
             <div className='d-flex flex-column'>
                 <a href="https://aelf.com/develop.html" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Aelf Developer Center</a>
-                <a href="" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Aelf Academy Discord</a>
+                <a href="https://discord.gg/Xag6TAPcgh" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">Aelf Academy Discord</a>
                 <a href="https://aelf-boilerplate-docs.readthedocs.io/en/latest/overview/setup.html" className='mt-3 footer-link' target="_blank" rel="noopener noreferrer">AelfBoilerplate Documentation</a>
                
             </div>
