@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/aelf-academy-fe/static/css/main.f7c34228.css",
+    "main.js": "/aelf-academy-fe/static/js/main.eb77c2ac.js",
+    "static/js/787.c20a74e2.chunk.js": "/aelf-academy-fe/static/js/787.c20a74e2.chunk.js",
+    "static/media/GeneralSans-VariableItalic.ttf": "/aelf-academy-fe/static/media/GeneralSans-VariableItalic.37a2c9e4ec944dec5059.ttf",
+    "static/media/GeneralSans-Variable.ttf": "/aelf-academy-fe/static/media/GeneralSans-Variable.d7facbbe2ed9ae4aae49.ttf",
+    "static/media/person-programming.png": "/aelf-academy-fe/static/media/person-programming.516d061ee7fb09d46b58.png",
+    "static/media/GeneralSans-LightItalic.ttf": "/aelf-academy-fe/static/media/GeneralSans-LightItalic.01f39fefaea383e46bde.ttf",
+    "static/media/GeneralSans-MediumItalic.ttf": "/aelf-academy-fe/static/media/GeneralSans-MediumItalic.8eb302fc9872cba25291.ttf",
+    "static/media/GeneralSans-Italic.ttf": "/aelf-academy-fe/static/media/GeneralSans-Italic.61b5c6351467c3e67236.ttf",
+    "static/media/GeneralSans-SemiboldItalic.ttf": "/aelf-academy-fe/static/media/GeneralSans-SemiboldItalic.e325608e1fa36dcac179.ttf",
+    "static/media/GeneralSans-Light.ttf": "/aelf-academy-fe/static/media/GeneralSans-Light.69935ec696c32e0cb38b.ttf",
+    "static/media/GeneralSans-Regular.ttf": "/aelf-academy-fe/static/media/GeneralSans-Regular.6d91885b9c7fa66bdd05.ttf",
+    "static/media/GeneralSans-BoldItalic.ttf": "/aelf-academy-fe/static/media/GeneralSans-BoldItalic.89074cc2992a9e354b7f.ttf",
+    "static/media/GeneralSans-ExtralightItalic.ttf": "/aelf-academy-fe/static/media/GeneralSans-ExtralightItalic.f2b0d5013d4b60046410.ttf",
+    "static/media/GeneralSans-Medium.ttf": "/aelf-academy-fe/static/media/GeneralSans-Medium.c729d67488834af78b6a.ttf",
+    "static/media/GeneralSans-Semibold.ttf": "/aelf-academy-fe/static/media/GeneralSans-Semibold.f6a5bacab0316e8117bb.ttf",
+    "static/media/GeneralSans-Extralight.ttf": "/aelf-academy-fe/static/media/GeneralSans-Extralight.e9e1615018c62dee6364.ttf",
+    "static/media/GeneralSans-Bold.ttf": "/aelf-academy-fe/static/media/GeneralSans-Bold.148ea237c2c383c0be34.ttf",
+    "static/media/logo.svg": "/aelf-academy-fe/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/aelf-academy-fe/index.html",
+    "main.f7c34228.css.map": "/aelf-academy-fe/static/css/main.f7c34228.css.map",
+    "main.eb77c2ac.js.map": "/aelf-academy-fe/static/js/main.eb77c2ac.js.map",
+    "787.c20a74e2.chunk.js.map": "/aelf-academy-fe/static/js/787.c20a74e2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f7c34228.css",
+    "static/js/main.eb77c2ac.js"
+  ]
+}
