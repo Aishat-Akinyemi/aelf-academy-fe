@@ -11,9 +11,7 @@ const Quest = ({userRole}) => {
       courseTitle: "Aelf 101: Getting Started with AElf",
       submissionReward: 50,
       moderationReward: 20,
-      instructions: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quaerat maxime quas ipsam eius explicabo iure quia natus! Doloribus maxime ad numquam est odit eos, assumenda temporibus, facilis culpa ullam dolorem?
-      Pariatur dolor obcaecati magnam placeat eos soluta ipsam magni nemo exercitationem fugit veritatis accusamus repellat ex repellendus, saepe deserunt facilis quasi quia distinctio assumenda ea alias? Iusto nemo eos minus.
-      Voluptates id quis totam perspiciatis, amet illum ipsum pariatur deleniti et sequi mollitia quisquam praesentium, aut officiis veritatis eius architecto quibusdam dicta eligendi. Quidem voluptatem reprehenderit sed iste dicta esse?`
+      instructions: `This is a dummy quest instruction. Course contents are still in progress. This is a dummy quest instruction. ake a screenshot of your development environment set-up and a proof that you were able to successfully install the dependencies. Create a github gist containing your submission.`
 
     });
 
