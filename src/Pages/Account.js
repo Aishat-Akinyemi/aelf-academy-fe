@@ -2,99 +2,104 @@ import React, {useState} from 'react'
 import { Button, Stack,  Form, Card,  Accordion, Badge, Modal, Spinner} from 'react-bootstrap';
 import AddCourse from '../components/AddCourse'
 
-const Account = ({user}) => {
+const Account = ({user, addUser}) => {
     const [userInfo, setUserInfo] = useState(user);
     const [submissionList, setSubmissionList] = useState(learnerSubmissionList);
     const [courses, setCourses]  =useState(courseList);
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(() => () => user!==null);
     const [username, setUsername] = useState(''); 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const addCourse = () => {}
-    const addUser = () => {
-        
+    const handleAddLearner = () => {        
         handleClose();
     }
 
+
     return (
         <div className='contain mm'>
-                <header>
-                    <h2 className="text-center m-5">Welcome, {userInfo.Username}!</h2>
-                </header>
-                <div className=''>
-                    {
-                        userInfo.Role === 'Learner' 
-                        &&
-                        <>
-                           { <Card border='primary'>
-                                    <Card.Header>
-                                        Quests Submission History 
-                                    </Card.Header>
-                                    <Card.Body>
-                                        {/* //userSubmissions? */}
-                                        {
-                                             
-                                            <Accordion>
-                                                {
-                                                    submissionList.map((courseSubmission, i)=> ( 
-                                                        <Accordion.Item eventKey={i} key={i}>
-                                                            <Accordion.Header className='d-flex'>
-                                                                <span className='me-auto bd-highlight'>Course: {courses.find(c => c.CourseId === courseSubmission.courseId).CourseTitle}</span>
-                                                                {courseSubmission.submissions[ courseSubmission.submissions.length - 1].isApproved 
-                                                                    &&   <span className='sm-txt'>
-                                                                       <span className='me-3'> Moderated by <h5 className='in-line ms-3'><Badge bg="primary">{courseSubmission.submissions[courseSubmission.submissions.length - 1].moderatorUsernam}</Badge></h5> </span> 
-                                                                        <span> Reward<h5 className='in-line ms-3'><Badge bg="primary"> {courses.find(c => c.CourseId === courseSubmission.courseId).SubmissionReward} </Badge></h5>                                                                      </span>
-                                                                        
-                                                                             
-                                                                    </span>
-                                                                
-                                                                } 
-                                                            </Accordion.Header>
-                                                                {
-                                                                    <Accordion.Body>
-                                                                        {
-                                                                            courseSubmission.submissions.map((s, x) => (                                                                    
-                                                                                <Card.Body key={x} className="d-flex"> 
-                                                                                    <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer" className='me-auto bd-highlight'>View Submission</a>
-                                                                                                                                                                                                                          
-                                                                                    {
-                                                                                        s.moderatedBy!=='' 
-                                                                                        ? 
-                                                                                        <span className='sm-txt'>
-                                                                                            <span className='me-3'>
-                                                                                                Moderated by {s.moderatorUsernam}
-                                                                                            </span>
-                                                                                            <span >
-                                                                                                {s.isApproved ? 'Quest Approved': 'Not Approved'}
-                                                                                            </span>
-                                                                                                
-                                                                                        </span>                                                                                  
+            {
+                userInfo ?
+                <>
+                    <header>
+                        <h2 className="text-center m-5">Welcome, {userInfo.username}!</h2>
+                    </header>
+                    <div className=''>
+                        {
+                            userInfo.role === 'Learner' 
+                            &&
+                            <>
+                            { <Card border='primary'>
+                                        <Card.Header>
+                                            Quests Submission History 
+                                        </Card.Header>
+                                        <Card.Body>
+                                            {/* //userSubmissions? */}
+                                            {
+                                                
+                                                <Accordion>
+                                                    {
+                                                        submissionList.map((courseSubmission, i)=> ( 
+                                                            <Accordion.Item eventKey={i} key={i}>
+                                                                <Accordion.Header className='d-flex'>
+                                                                    <span className='me-auto bd-highlight'>Course: {courses.find(c => c.CourseId === courseSubmission.courseId).CourseTitle}</span>
+                                                                    {courseSubmission.submissions[ courseSubmission.submissions.length - 1].isApproved 
+                                                                        &&   <span className='sm-txt'>
+                                                                        <span className='me-3'> Moderated by <h5 className='in-line ms-3'><Badge bg="primary">{courseSubmission.submissions[courseSubmission.submissions.length - 1].moderatorUsernam}</Badge></h5> </span> 
+                                                                            <span> Reward<h5 className='in-line ms-3'><Badge bg="primary"> {courses.find(c => c.CourseId === courseSubmission.courseId).SubmissionReward} </Badge></h5>                                                                      </span>
+                                                                            
+                                                                                
+                                                                        </span>
+                                                                    
+                                                                    } 
+                                                                </Accordion.Header>
+                                                                    {
+                                                                        <Accordion.Body>
+                                                                            {
+                                                                                courseSubmission.submissions.map((s, x) => (                                                                    
+                                                                                    <Card.Body key={x} className="d-flex"> 
+                                                                                        <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer" className='me-auto bd-highlight'>View Submission</a>
+                                                                                                                                                                                                                            
+                                                                                        {
+                                                                                            s.moderatedBy!=='' 
+                                                                                            ? 
+                                                                                            <span className='sm-txt'>
+                                                                                                <span className='me-3'>
+                                                                                                    Moderated by {s.moderatorUsernam}
+                                                                                                </span>
+                                                                                                <span >
+                                                                                                    {s.isApproved ? 'Quest Approved': 'Not Approved'}
+                                                                                                </span>
+                                                                                                    
+                                                                                            </span>                                                                                  
+                                                                                            
+                                                                                            : <span className='sm-txt'>Awaiting Review</span>  
                                                                                         
-                                                                                        : <span className='sm-txt'>Awaiting Review</span>  
-                                                                                       
-                                                                                    }
-                                                                                </Card.Body>
-                                                                        ))
-                                                                        }
-                                                                    </Accordion.Body>
-                                                                }
-                                                            
-                                                        </Accordion.Item>
-                                                    ))
-                                                }
-                                            </Accordion>
-                                        } 
-                                    </Card.Body>
-                            </Card>
-                             
-                        }   
-                        </> 
-                    }
-                </div>
+                                                                                        }
+                                                                                    </Card.Body>
+                                                                            ))
+                                                                            }
+                                                                        </Accordion.Body>
+                                                                    }
+                                                                
+                                                            </Accordion.Item>
+                                                        ))
+                                                    }
+                                                </Accordion>
+                                            } 
+                                        </Card.Body>
+                                </Card>
+                                
+                            }   
+                            </> 
+                        }
+                    </div>               
 
-
-                {/* account Modal */}
+                    {userInfo.role === "Admin" && <AddCourse addCourse={addCourse}/>}
+                </>
+                :
+                // account creation modal
                 <>
                 <Modal 
                     size="sm"
@@ -122,17 +127,17 @@ const Account = ({user}) => {
                     </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                    <Button variant="primary" onClick={addUser}>
+                    <Button variant="primary" disabled={username.length<5} onClick={()=> {
+                        addUser(username);
+                        handleClose();
+                    }}>
                         Join
                     </Button>
                     </Modal.Footer>
                 </Modal>
-
-                <AddCourse addCourse={addCourse}/>
-
                 </>
-
-            </div>
+            }      
+        </div>
             
       )
 }

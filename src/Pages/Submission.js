@@ -136,7 +136,7 @@ const Submission = ({/**courseId, learnerAdd, role*/}) => {
             <ToastContainer className="p-3" position='middle-center'>
                 <Toast show={showSubmissionSuccess} onClose={() => setShowSubmissionSuccess(!showSubmissionSuccess)}>
                     <Toast.Header>                    
-                    <strong className="me-auto">Congrats on submitting your solution 🚀🚀</strong>
+                    <strong className="me-auto"> Congrats on submitting your solution 🚀🚀 </strong>
                     </Toast.Header>
                     <Toast.Body>Successfully submitted solution to quest: {courseTitle}</Toast.Body>
                 </Toast>

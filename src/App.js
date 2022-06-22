@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate} from 'react-router-dom';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -12,47 +12,53 @@ import Quest from './Pages/Quest';
 import Account from './Pages/Account';
 import Submission from './Pages/Submission'
 
-import { getChainStatus, getAcademyInfo } from './utils/Aelf';
-
-const userList = [
-  {
-    Username: 'chief_moderator1',
-    Role: 'Chief Moderator',
-    Level: 0,
-    Reward: 100
-  },
-  {
-    Username: 'admin1',
-    Role: 'Admin',
-    Level: 0,
-    Reward: 200
-  },
-  {
-    Username: 'Kate',
-    Role: 'Learner',
-    Level: 1,
-    Reward: 500
-  }
-]
+import { login, getLearners, getUserInfo, addLearner} from './utils/Aelf';
 
 function App() {
-  const [user, setUser] = useState(userList[2]);
+  const [user, setUser] = useState(null);
+  const [userAddress, setUserAddress] = useState([]);
+  let navigate = useNavigate();
+
+  const  loginUser = async () => {
+      try{
+          let userAddress = await login();
+          if(userAddress){
+            setUserAddress(userAddress);
+            setUser(await getUserInfo(userAddress))
+            navigate("/account");                     
+          }
+      } catch(e){ 
+        console.log(e)       
+      }
+  }
+  const addNewLearner = async (userName) => {
+    try{
+      const addedUser = await(addLearner(userName));
+      if(addedUser){
+        setUser(await getUserInfo(userAddress));    
+        console.log(user);    
+      }
+    } catch(e){
+      console.log(e) 
+    }
+  }
   
+ 
   return (
-    <Router>
-        <Header user={user}/>
+    <>
+        <Header login={loginUser} user={user}/>
         <Routes>
             <Route path='/' element={<Home/>}/>
             <Route path='/courses' element={<Courses/>}/>
             <Route path='/course/:courseId' element={<Coursedetails/>}/>            
             <Route path='/quest/:courseId' element={<Quest/>}/>
-            <Route path='/account' element={<Account user={user}/>}/>
+            <Route path='/account' element={<Account user={user} addUser={addNewLearner}/>}/>
             <Route path='/entries/:courseId' element={<Submission/>}/>
             {/* <Route path='/' element={}/> */}
             <Route path='*' element={<Home/>}/>
         </Routes>
         <Footer/>
-    </Router>
+    </>
   );
 }
 
