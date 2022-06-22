@@ -1,15 +1,26 @@
 import React, {useState} from 'react'
-import { Button, Stack,  Form, Card,  Accordion, Badge} from 'react-bootstrap';
+import { Button, Stack,  Form, Card,  Accordion, Badge, Modal, Spinner} from 'react-bootstrap';
+import AddCourse from '../components/AddCourse'
 
 const Account = ({user}) => {
     const [userInfo, setUserInfo] = useState(user);
     const [submissionList, setSubmissionList] = useState(learnerSubmissionList);
     const [courses, setCourses]  =useState(courseList);
+    const [show, setShow] = useState(false);
+    const [username, setUsername] = useState(''); 
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const addCourse = () => {}
+    const addUser = () => {
+        
+        handleClose();
+    }
 
     return (
         <div className='contain mm'>
                 <header>
-                    <h2 className="text-center m-5">Welcome Back, {userInfo.Username}</h2>
+                    <h2 className="text-center m-5">Welcome, {userInfo.Username}!</h2>
                 </header>
                 <div className=''>
                     {
@@ -81,6 +92,46 @@ const Account = ({user}) => {
                         </> 
                     }
                 </div>
+
+
+                {/* account Modal */}
+                <>
+                <Modal 
+                    size="sm"
+                    show={show} 
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered                    
+                >
+                    <Modal.Header>
+                    <Modal.Title>Create Learner Profile</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3" controlId="userNameInput">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="enter preferred username"
+                            onChange={(e) => { setUsername(e.target.value); }}
+                            autoFocus
+                        />
+                        </Form.Group>                        
+                    </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="primary" onClick={addUser}>
+                        Join
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                <AddCourse addCourse={addCourse}/>
+
+                </>
+
             </div>
             
       )

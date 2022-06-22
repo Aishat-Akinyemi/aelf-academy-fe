@@ -4,6 +4,12 @@ import axios from "axios";
 export const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 export async function uploadDataToIpfs(data) {
+    // const data =  JSON.stringify({
+    //     name: meme.name,
+    //     image: meme.image,
+    //     description: meme.description,
+    //     location: meme.location
+    //   });
     //uploads stringified data to ipfs
     try {
       // save to save data to IPFS

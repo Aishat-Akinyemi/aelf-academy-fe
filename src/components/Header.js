@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import logo from '../assets/img/logo.svg'
 import { Button, Badge } from "react-bootstrap";
-import {InitializeContract1} from '../utils/Aelf';
+import {InitializeContract1, addLearner, getAcademyInfo, getAllCourses, getCourse, getResult} from '../utils/Aelf';
 import {Link, useNavigate} from 'react-router-dom';
 
 const Header = ({user}) => {
@@ -10,8 +10,13 @@ const Header = ({user}) => {
 //    const initContract = () => {
 //         InitializeContract1();
 //    }
-    const goToAccount= () => {
-
+    const getAInfo = async () => {
+        try{
+            console.log(await addLearner());  
+        } catch(e){
+            console.log(e);
+            alert(e)
+        }  
     }
 
   return (
@@ -38,10 +43,21 @@ const Header = ({user}) => {
             </li>
             <li className="nav-item">
              <Button variant="outline-primary" onClick={()=> {
+                        // InitializeContract1();
+
                         navigate("/account");
                     }}
                 >
                 {userInfo.Username} 
+                <Badge className='ms-2'>{userInfo.Reward}</Badge>
+                </Button>
+             {/* <Button variant="outline-primary" onClick={initContract}>Login with aelf</Button> */}
+            </li>
+            <li className="nav-item">
+             <Button variant="outline-primary"
+            //   onDoubleClick={addLearner}
+            onClick ={getAInfo}
+                >Create Account
                 <Badge className='ms-2'>{userInfo.Reward}</Badge>
                 </Button>
              {/* <Button variant="outline-primary" onClick={initContract}>Login with aelf</Button> */}

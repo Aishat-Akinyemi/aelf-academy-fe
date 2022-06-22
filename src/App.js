@@ -12,6 +12,8 @@ import Quest from './Pages/Quest';
 import Account from './Pages/Account';
 import Submission from './Pages/Submission'
 
+import { getChainStatus, getAcademyInfo } from './utils/Aelf';
+
 const userList = [
   {
     Username: 'chief_moderator1',
@@ -35,6 +37,7 @@ const userList = [
 
 function App() {
   const [user, setUser] = useState(userList[2]);
+  
   return (
     <Router>
         <Header user={user}/>
