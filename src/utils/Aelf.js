@@ -46,8 +46,7 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
         }
       )
     setTimeout(() => {
-        reject(  
-          {        
+        reject({        
             error: 200001,
             message: 'timeout / can not find NightElf / please install the extension'
         });
@@ -55,81 +54,18 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
   
 });
 
-  // export function InitializeContractT() {
-  //   getNightaelfInstance.then(
-  //     result => {
-  //         //get AElf;
-  //         const aelf = result;
-         
-  //         //perform action
-  //         aelf.chain.getChainStatus((error, result) => {   
-  //         const GenesisContractAddress = result.result.GenesisContractAddress;       
-  //         const chainId =  result.result.ChainId;
-  //         if (!chainId) {
-  //           alert('Error connecting to chain.');
-  //           return;
-  //         }
-  //         // console.log('login....');
-  //         aelf.login({
-  //           appName,
-  //           chainId: chainId,
-  //           payload: {
-  //             method: 'LOGIN',
-  //             contracts: [{
-  //               chainId: chainId,
-  //               contractAddress: aelfEnv.contractAddress,
-  //               contractName: aelfEnv.contractName,
-  //               description: 'AelfAcademy smartcontract',
-  //               github: ''
-  //             }]
-  //           }
-  //         }, (err, result) => {
-  //           // console.log('>>>>>>> login >>>>>>>>>>>>', err, result);
-  //           const wallet = JSON.parse(result.detail);
-  //           // console.log(wallet);
-  //           if (!wallet) {
-  //             alert('Click Login to connect wallet to Aelf Academy');
-  //             return;
-  //           }  
-                  
-          
-  //         //get zerocontract         
-  //         aelf.chain.contractAt(
-  //           // aelfEnv.contractAddress,
-  //           GenesisContractAddress,
-  //           wallet,
-  //           (error, result) => {
-  //            // result is the genesiscontract, now call its getContractByName method
-  //             result.GetContractAddressByName.call(aelfEnv.tokenContractName,                
-  //               (err, res) => {                  
-  //                 console.log(err, res);
-  //               } 
-  //             )
-  //             console.log(result);
-  //           }
-  //         );
-
-  //           aelf.chain.contractAt(
-  //             aelfEnv.contractAddress,
-  //             wallet,
-  //             (error, result) => {
-  //               // console.log('>>>>>>>>>>>>> contractAtAsync >>>>>>>>>>>>>');
-  //               // console.log(error, result);
-  //               window.Contract = result;
-  //               // console.log(result);
-  //             }
-  //           );
-  //         });
-  //       });
-  //     },
-  //     error => {
-  //       alert(error.message);
-  //     });
-  //    };
-
-  export async function login() {
+  export function login() {
     try{      
-      const aelf =  await getNightaelfInstance;
+      let aelf;
+      getNightaelfInstance.then(
+        (res) =>{
+          aelf = res;
+        },
+        (err) => {
+          alert("Please install Aelf Extension and try again");
+            return Promise.reject({Message: "Please install Aelf Extension and try again" });
+        }
+      )
       return new Promise((resolve, reject) => {
         aelf.chain.getChainStatus((error, result) => {
           if(result.error!==0){
@@ -139,7 +75,6 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
           if (!chainId) {            
             return reject({Message: 'Error connecting to chain.'});
           }
-           // console.log('login....');
            aelf.login({
             appName,
             chainId: chainId,
@@ -156,8 +91,6 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
           }, (err, result) => {
             const wallet = JSON.parse(result.detail);
             if (!wallet) {
-              // alert('Click Login to connect wallet to Aelf Academy');
-              // return;
               reject({Message: 'Click Login to connect wallet to Aelf Academy'})
             }
         
@@ -236,8 +169,7 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
  */
 export async function addLearner(username){
   if (!window.Contract) {
-    alert('not yet initialized');
-    return;
+    return Promise.reject('Login to Aelf First');
   }
   try{
     return new  Promise((resolve, reject) => {
