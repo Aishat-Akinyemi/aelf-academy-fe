@@ -2,10 +2,8 @@ import { Button,Stack } from 'react-bootstrap';
 import {useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
-const Quest = ({userRole}) => {
+const Quest = ({user}) => {
     let navigate = useNavigate();
-    const role = "Learner";
-    // const role = userRole;
     const {courseId } = useParams();
     const [quest, setQuest] = useState({
       courseTitle: "Aelf 101: Getting Started with AElf",
@@ -37,7 +35,7 @@ const Quest = ({userRole}) => {
                   onClick={() => {
                     navigate(`/entries/${courseId}`);
                     }}
-                >{role === 'Learner'? `Submit Entry`: `Review Entries`}</Button>
+                >{user.role === 'Learner'? `Submit Entry`: `Review Entries`}</Button>
             </Stack>
 
         </div>

@@ -1,4 +1,5 @@
 import environment from './config';
+import {fetchDataFromIpfs} from './Ipfs'
 
 const aelfEnv = environment("tdvw");
 const defaultPrivateKey = aelfEnv.defaultPrivateKey;
@@ -250,8 +251,12 @@ export async function addLearner(username){
             );
         } else {
           try {
-            const txId = result.result.TransactionId;
-            resolve(getResult(txId));
+             const txId = result.result.TransactionId;
+            // return resolve(getResult(txId));
+            getResult(txId).then(
+              (res) => { return resolve(res)},
+              (err) => {return reject(err)}
+            )
           } catch(e){
               reject(e)
           }
@@ -268,7 +273,7 @@ export async function addLearner(username){
  * @param {submissionReward: number, moderationReard: number, level: number, contentUrl: string, courseTitle: string} courseInput 
  * @returns {Promise} a resolved promise containing the status of the transaction and the logs
  * or a rejected promise containing the error message
- * @type {(courseInput: {submissionReward: number, moderationReard: number, level: number, contentUrl: string, courseTitle: string})}
+ * @type {(courseInput: {submissionReward: number, moderationReward: number, level: number, contentUrl: string, courseTitle: string})}
  */
 export async function addCourse(courseInput){
   if (!window.Contract) {
@@ -487,23 +492,25 @@ export async function addAdmin(addUserInput){
 export async function getResult(txId){ 
     try{
       const aelf = await getNightaelfInstance;
-      return new Promise((resolve, reject) => {
-        aelf.chain.getTxResult(txId, (err, result) => {
-          if(result.error!==0){
-            const message = result.errorMessage.message;
-              return reject({
-                Message: message}
-              );
-          }
-          if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){
-            return reject("Action failed!");            
-          } 
-          else {
-            const {Status, Logs} =  result.result
-            return resolve({Status, Logs});
-          }
-        });
-      })
+      setTimeout(() => {
+        return new Promise((resolve, reject) => {
+          aelf.chain.getTxResult(txId, (err, result) => {
+            if(result.error!==0){
+              const message = result.errorMessage.message;
+                return reject({
+                  Message: message}
+                );
+            }
+            if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){
+              return reject("Action failed!");            
+            } 
+            else {
+              const {Status, Logs} =  result.result
+              return resolve({Status, Logs});
+            }
+          });
+        })
+      }, 1000);
 
     } catch(e) {
       alert(e);
@@ -612,12 +619,41 @@ export function getAllCourses(){
     return;
   }
   return new Promise((resolve, reject) =>{
-    window.Contract.GetCourse.call(
+    window.Contract.GetCourses.call(
       (err, result) => {
       if(result.error === 0){
-        console.log(result.result)
-        resolve(result.result.courseList);
+       const courses = result.result.courseList;
+       console.log(courses);
+       const courseList = [];   
+       courses.forEach(course => {
+          if(course.courseId==='1'){
+            //correct error I committed during testing, TODO remember to remove after deploying a new contract
+            course.contenturl = 'https://ipfs.io/ipfs/QmWeN3ttqoXJCPttynVBpZa3QE1e5TR9wuFqjPH6K99cSU';
+          }
+          fetchDataFromIpfs(course.contenturl).then(
+            (res)=> {              
+              const finalCourseObj= {
+                courseId : course.courseId,
+                submissionReward: course.submissionReward,
+                moderationReward: course.moderationReward,
+                level: course.level,
+                introduction: res.data.introduction,
+                toc: res.data.toc,
+                challengeDescription: res.data.challengeDescription,
+                content: res.data.challengeDescription,
+                courseTitle: course.courseTitle ,
+              }  
+              if(course.courseId ==='3'){
+                finalCourseObj.introduction = 'This course aims to help you setup your local system for smartcontract development on Aelf blockchain protocol.';
+              }            
+              courseList.push(finalCourseObj);
+            }
+          )
+
+       });
+       resolve(courseList);
       }
+      
       else {
         const {Code, Message} = result.errorMessage.message;
         reject({

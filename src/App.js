@@ -12,20 +12,21 @@ import Quest from './Pages/Quest';
 import Account from './Pages/Account';
 import Submission from './Pages/Submission'
 
-import { login, getLearners, getUserInfo, addLearner} from './utils/Aelf';
+import { login, getAcademyInfo, getUserInfo, addLearner, getAllCourses} from './utils/Aelf';
 
 function App() {
   const [user, setUser] = useState(null);
   const [userAddress, setUserAddress] = useState([]);
+  const [courses, setCourses] = useState([]);
   let navigate = useNavigate();
-
   const  loginUser = async () => {
       try{
           let userAddress = await login();
           if(userAddress){
             setUserAddress(userAddress);
-            setUser(await getUserInfo(userAddress))
-            navigate("/account");                     
+            setUser(await getUserInfo(userAddress));
+            setCourses(await getAllCourses());
+            navigate("/account");
           }
       } catch(e){ 
         console.log(e)       
@@ -36,24 +37,33 @@ function App() {
       const addedUser = await(addLearner(userName));
       if(addedUser){
         setUser(await getUserInfo(userAddress));    
-        console.log(user);    
+        console.log(user);     
       }
     } catch(e){
       console.log(e) 
     }
   }
   
+  const getUserDetails = async() => {
+    try{
+      const userInfo = await getUserInfo(userAddress);  
+        setUser(userInfo);           
+        console.log(user);    
+      } catch(e){
+      console.log(e) 
+    }
+  }
  
   return (
     <>
         <Header login={loginUser} user={user}/>
         <Routes>
             <Route path='/' element={<Home/>}/>
-            <Route path='/courses' element={<Courses/>}/>
+            <Route path='/courses' element={<Courses user={user}/>}/>
             <Route path='/course/:courseId' element={<Coursedetails/>}/>            
-            <Route path='/quest/:courseId' element={<Quest/>}/>
-            <Route path='/account' element={<Account user={user} addUser={addNewLearner}/>}/>
-            <Route path='/entries/:courseId' element={<Submission/>}/>
+            <Route path='/quest/:courseId' element={<Quest user={user}/>}/>
+            <Route path='/account' element={<Account user={user} getUser={getUserDetails}/>}/>
+            <Route path='/entries/:courseId' element={<Submission user={user}/>}/>
             {/* <Route path='/' element={}/> */}
             <Route path='*' element={<Home/>}/>
         </Routes>

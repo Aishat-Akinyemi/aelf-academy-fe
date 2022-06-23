@@ -3,7 +3,7 @@ import {Row, Col, Button} from 'react-bootstrap'
 import TableOfContent from '../components/TableOfContent';
 import {useNavigate} from 'react-router-dom';
 
-const Coursedetails = () => {
+const Coursedetails = ({}) => {
     let navigate = useNavigate();
     const [course, setCourse] = useState({
         courseId:1,

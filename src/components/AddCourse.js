@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 
 const AddCourse = ({addCourse}) => {
     const [title, setTitle] = useState('');
-    const [level, setLevel] = useState();
-    const [submissionReward, setSubmissionReward] = useState();
-    const [moderationReward, setModerationReward] = useState();
+    const [level, setLevel] = useState(0);
+    const [submissionReward, setSubmissionReward] = useState(0);
+    const [moderationReward, setModerationReward] = useState(0);
     const [introduction, setIntroduction] = useState('');
     const [toc, setToc] = useState([]);
     const [challengeDescription, setChallengeDescription] = useState('');
@@ -17,7 +17,6 @@ const AddCourse = ({addCourse}) => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
     return (
                 <>
                     <Button
