@@ -38,29 +38,15 @@ function App() {
       console.log(e)       
     }
 }
-// const  loginUser = async () => {
-//   try{
-//       let userAddress = await login();
-//       if(userAddress){
-//         setUserAddress(userAddress);
-//         setUser(await getUserInfo(userAddress))
-//         navigate("/account");                     
-//       }
-//   } catch(e){ 
-//     console.log(e)       
-//   }
-// }
-
-  const addNewLearner = async (userName) => {
-    try{
-      const addedUser = await(addLearner(userName));
-      if(addedUser){
-        setUser(await getUserInfo(userAddress));    
-        console.log(user);     
-      }
-    } catch(e){
-      console.log(e) 
-    }
+    const addNewLearner = (userName) => {    
+      addLearner(userName).then(
+        res => {
+          console.log(`added `, res)
+          setUser(res);
+        }
+      ).catch(e => {
+        alert(e.Message);
+      })    
   }
   
   const getUserDetails = async() => {
