@@ -54,60 +54,6 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
   
 });
 
-  // export async function login() {
-  //   try{      
-  //     let aelf;
-  //     getNightaelfInstance.then(
-  //       (res) =>{
-  //         aelf = res;
-  //         return new Promise((resolve, reject) => {
-  //           aelf.chain.getChainStatus((error, result) => {
-  //             if(result.error!==0){
-  //               reject({Message: 'Error connecting to chain.'});
-  //             }
-  //             const chainId =  result.result.ChainId;
-  //             if (!chainId) {            
-  //                reject({Message: 'Error connecting to chain.'});
-  //             }
-  //              aelf.login({
-  //               appName,
-  //               chainId: chainId,
-  //               payload: {
-  //                 method: 'LOGIN',
-  //                 contracts: [{
-  //                   chainId: chainId,
-  //                   contractAddress: aelfEnv.contractAddress,
-  //                   contractName: aelfEnv.contractName,
-  //                   description: 'AelfAcademy smartcontract',
-  //                   github: ''
-  //                 }]
-  //               }
-  //             }, (err, result) => {
-  //               const wallet = JSON.parse(result.detail);
-  //               if (!wallet) {
-  //                  reject({Message: 'Click Login to connect wallet to Aelf Academy'})
-  //               }
-            
-  //               aelf.chain.contractAt(
-  //                 aelfEnv.contractAddress,
-  //                 wallet,
-  //                 (error, result) => {
-  //                   window.Contract = result;
-  //                    resolve(wallet.address);
-  //                 }
-  //               );
-  //             });
-  //         })
-  //       })
-  //       },
-  //       (err) => {
-  //         alert("Please install Aelf Extension and try again");
-  //           return Promise.reject({Message: "Please install Aelf Extension and try again" });
-  //       })      
-  //   } catch(err) {
-  //     return Promise.reject(err);
-  //   }
-  // }
 
   export function login() {     
       return new Promise((resolve, reject) => {
@@ -154,7 +100,6 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
               })          
             },
             (err) => {
-              alert("Please install Aelf Extension and try again");
                 reject({Message: "Please install Aelf Extension and try again" });
             })   
         } catch(e){
