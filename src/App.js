@@ -19,19 +19,38 @@ function App() {
   const [userAddress, setUserAddress] = useState([]);
   const [courses, setCourses] = useState([]);
   let navigate = useNavigate();
-  const  loginUser = async () => {
-      try{
-          let userAddress = await login();
-          if(userAddress){
-            setUserAddress(userAddress);
-            setUser(await getUserInfo(userAddress));
-            setCourses(await getAllCourses());
-            navigate("/account");
-          }
-      } catch(e){ 
-        console.log(e)       
-      }
-  }
+
+  const  loginUser = () => {
+    try{
+        login().then(
+         async (res) => {
+            if(res){
+              setUserAddress(res);
+              setUser(await getUserInfo(res));
+              setCourses(await getAllCourses());
+              navigate("/account");
+            }
+          },
+          (err) => {
+              alert(err.Message)
+          })          
+    } catch(e){ 
+      console.log(e)       
+    }
+}
+// const  loginUser = async () => {
+//   try{
+//       let userAddress = await login();
+//       if(userAddress){
+//         setUserAddress(userAddress);
+//         setUser(await getUserInfo(userAddress))
+//         navigate("/account");                     
+//       }
+//   } catch(e){ 
+//     console.log(e)       
+//   }
+// }
+
   const addNewLearner = async (userName) => {
     try{
       const addedUser = await(addLearner(userName));
