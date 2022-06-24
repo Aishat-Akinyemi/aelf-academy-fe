@@ -16,7 +16,7 @@ import { login, getAcademyInfo, getUserInfo, addLearner, getAllCourses} from './
 
 function App() {
   const [user, setUser] = useState(null);
-  const [userAddress, setUserAddress] = useState([]);
+  const [userAddress, setUserAddress] = useState();
   const [courses, setCourses] = useState([]);
   let navigate = useNavigate();
 
@@ -63,7 +63,7 @@ function App() {
     <>
         <Header login={loginUser} user={user}/>
         <Routes>
-            <Route path='/' element={<Home/>}/>
+            <Route path='/' element={<Home user={user}/>}/>
             <Route path='/courses' element={<Courses user={user}/>}/>
             <Route path='/course/:courseId' element={<Coursedetails/>}/>            
             <Route path='/quest/:courseId' element={<Quest user={user}/>}/>

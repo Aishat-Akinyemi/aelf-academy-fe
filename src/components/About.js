@@ -3,8 +3,14 @@ import displayImg from '../assets/img/person-programming.png';
 import aelfLogo from '../assets/img/aelfLogo.png';
 import {useNavigate} from 'react-router-dom';
 
-const About = () => {
+const About = ({user}) => {
     let navigate = useNavigate();
+    const handleStartLearning = () => {
+        if(user==null){
+            return alert("Please Login with the Aelf browser Extension to start learning")
+        }
+        navigate("/courses");
+    }
 
   return (
     <div>
@@ -14,9 +20,7 @@ const About = () => {
                 <p className='mt-4'>Aelf Academy is a decentralized peer-2-peer learning dApp with focus on onboarding developers onto Aelf ecosystem. Grow from zero to hero in your development journey on Aelf blockchain by taking curated courses, and completing quests at the end of each course.</p>
                 <p className='mt-'>You earn Elf tokens when you complete Quests, Review Quests or help others in the community.</p>
                 <Button className='mt-3'
-                    onClick={()=> {
-                        navigate("/courses");
-                    }}
+                    onClick={handleStartLearning}
                     >
                         Start Learning
                 </Button>
