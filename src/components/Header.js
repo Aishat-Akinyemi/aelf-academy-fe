@@ -38,7 +38,7 @@ const Header = ({user, login}) => {
                 <a className="nav-link" href="https://discord.gg/Xag6TAPcgh" target="_blank" rel="noopener noreferrer">Discord</a>
             </li>
             <li className="nav-item">
-                <a className="nav-link btn" href="#">English</a>
+                <a className="nav-link btn" href="#"  title="multi-language Support coming soon">English</a>
             </li>
             <li className="nav-item">
              {   
