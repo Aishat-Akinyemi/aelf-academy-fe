@@ -1,23 +1,42 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button, Stack,  Form, Card, ListGroup, Accordion, ToastContainer, Toast} from 'react-bootstrap';
 import { submitChallenge, getLearnerSubmission } from '../utils/Aelf';
 
 const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
+    const getSubmission = async () => { 
+        const submission = await getLearnerSubmission(user.address);
+        let sub = submission.submissions.find( e => e.courseId == courseId).submissions.list;             
+        return sub;
+    }
+
     const [courseTitle, setCourseTitle] = useState("Aelf 101: Getting Started with AElf");
     const [submissionReward, setSubmissionsReward] = useState(50);
     const [moderationReward, setmoderationReward] = useState(20);
     const [courseId, setCourseId] = useState(1);
-    const [submissionList, setSubmissionList] = useState(learnerSubmissionList.find(s => s.courseId === courseId).submissions);
+    const [submissionList, setSubmissionList] = useState(); 
+    useEffect(() => {     
+           getSubmission().then(data => setSubmissionList(data));
+          console.log(submissionList) 
+         }, [submissionList]);
+        
+        
     const [userSubmissions, setUserSubmissions] = useState(userSubmissionList);
     const [currentSubmissionInput, setCurrentSubmissionInput] = useState('');
     const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
     const [showModerationSuccess, setShowModerationSuccess] = useState(false);
 
-    const handleSubmission = () => {
+
+  
+    
+    const handleSubmission =  () => {       
+        const data = {
+            courseId: courseId,
+            submissionUrl: currentSubmissionInput
+        }
         try {
-            (submitChallenge(courseId, currentSubmissionInput)).then(
+            (submitChallenge(data)).then(
                 (res) => {
-                    console.log('', res);
+                    console.log(res);
                 },
                 (error) => {}
             ).catch(
@@ -25,15 +44,11 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                     console.log(err)
                 } 
             ).finally(
-                () => {
-                    setShowSubmissionSuccess(!showSubmissionSuccess);
-                    const sub = {
-                        submissionUrl:currentSubmissionInput,
-                        isApproved : false
-                    }
-                    setCurrentSubmissionInput('');
-                    setSubmissionList([...submissionList, sub]);
-                }
+              () => {
+                getSubmission();                
+                setShowSubmissionSuccess(!showSubmissionSuccess); 
+              }
+                
             )            
           } catch(e){
             console.log(e) 
@@ -55,6 +70,8 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                     ?
                     <>                    
                         {
+                        submissionList &&
+
                         !submissionList[submissionList.length - 1].isApproved &&
                         <Card border='primary' className='mb-5'>
                             <Card.Header>
@@ -87,6 +104,7 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                             </Card.Header>
                             <Card.Body>
                             <ListGroup variant="flush">{
+                                submissionList &&
                                 submissionList.map((s, i)=> (
                                     <ListGroup.Item key={i} className='border p-3'>
                                         <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer">View Submission</a>
