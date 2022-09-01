@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { Button, Stack,  Form, Card, ListGroup, Accordion, ToastContainer, Toast} from 'react-bootstrap';
+import { submitChallenge, getLearnerSubmission } from '../utils/Aelf';
 
 const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
     const [courseTitle, setCourseTitle] = useState("Aelf 101: Getting Started with AElf");
@@ -11,6 +12,33 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
     const [currentSubmissionInput, setCurrentSubmissionInput] = useState('');
     const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
     const [showModerationSuccess, setShowModerationSuccess] = useState(false);
+
+    const handleSubmission = () => {
+        try {
+            (submitChallenge(courseId, currentSubmissionInput)).then(
+                (res) => {
+                    console.log('', res);
+                },
+                (error) => {}
+            ).catch(
+                (err) => {
+                    console.log(err)
+                } 
+            ).finally(
+                () => {
+                    setShowSubmissionSuccess(!showSubmissionSuccess);
+                    const sub = {
+                        submissionUrl:currentSubmissionInput,
+                        isApproved : false
+                    }
+                    setCurrentSubmissionInput('');
+                    setSubmissionList([...submissionList, sub]);
+                }
+            )            
+          } catch(e){
+            console.log(e) 
+          }   
+    }
 
   return (
     <div className='contain mm position-relative'>
@@ -43,15 +71,8 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                                     <Button variant="primary" disabled={currentSubmissionInput.length<10}
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            setShowSubmissionSuccess(!showSubmissionSuccess);
-                                            const sub = {
-                                                submissionUrl:currentSubmissionInput,
-                                                isApproved : false
-                                            }
-                                            setCurrentSubmissionInput('');
-                                            setSubmissionList([...submissionList, sub]);
-                                            
-                                        }}
+                                            handleSubmission(); 
+                                            }}
                                     >Submit</Button>
                                 </Stack>
                             </Card.Body>
