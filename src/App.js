@@ -26,7 +26,10 @@ function App() {
          async (res) => {
             if(res){
               setUserAddress(res);
-              setUser(await getUserInfo(res));
+              //add useraddress to userINFO
+              let us_info = await getUserInfo(res);
+              us_info.address = res;
+              setUser(us_info);
               setCourses(await getAllCourses());
               navigate("/account");
             }
