@@ -1,26 +1,35 @@
 import React, {useState, useEffect} from 'react'
 import { Button, Stack,  Form, Card, ListGroup, Accordion, ToastContainer, Toast} from 'react-bootstrap';
-import { submitChallenge, getLearnerSubmission } from '../utils/Aelf';
+import { submitChallenge, getLearnerSubmission, getCourseSubmission, moderateChallenge } from '../utils/Aelf';
 
 const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
+    const [courseTitle, setCourseTitle] = useState("Aelf 101: Getting Started with AElf");
+    const [submissionReward, setSubmissionsReward] = useState(50);
+    const [moderationReward, setmoderationReward] = useState(20);
+    const [courseId, setCourseId] = useState(1);
+
     const getSubmission = async () => { 
         const submission = await getLearnerSubmission(user.address);
         let sub = submission.submissions.find( e => e.courseId == courseId).submissions.list;             
         return sub;
     }
+    const getCourseSubmissionList = async () => {
+        const allSubmissions = await getCourseSubmission(courseId);
+        let sub =  allSubmissions.userSubmissions;
+        return sub;
+    }
 
-    const [courseTitle, setCourseTitle] = useState("Aelf 101: Getting Started with AElf");
-    const [submissionReward, setSubmissionsReward] = useState(50);
-    const [moderationReward, setmoderationReward] = useState(20);
-    const [courseId, setCourseId] = useState(1);
+
     const [submissionList, setSubmissionList] = useState(); 
+    const [userSubmissions, setUserSubmissions] = useState();
     useEffect(() => {     
            getSubmission().then(data => setSubmissionList(data));
-          console.log(submissionList) 
-         }, [submissionList]);
+           getCourseSubmissionList().then(data => setUserSubmissions(data));
+
+         }, [submissionList, userSubmissionList]);
         
         
-    const [userSubmissions, setUserSubmissions] = useState(userSubmissionList);
+    
     const [currentSubmissionInput, setCurrentSubmissionInput] = useState('');
     const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
     const [showModerationSuccess, setShowModerationSuccess] = useState(false);
@@ -70,9 +79,8 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                     ?
                     <>                    
                         {
-                        submissionList &&
-
-                        !submissionList[submissionList.length - 1].isApproved &&
+                        ((submissionList &&
+                        !submissionList[submissionList.length - 1].isApproved) || submissionList ==null) &&
                         <Card border='primary' className='mb-5'>
                             <Card.Header>
                                 Submit Solution
@@ -98,6 +106,7 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                 
                 
                     {
+                        submissionList &&
                         <Card className=''>
                             <Card.Header>
                                 Previous Submissions
@@ -128,20 +137,21 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                                     {
                                          
                                         <Accordion>
-                                            {
+                                            { 
+                                                userSubmissions &&
                                                 userSubmissions.map((user, i)=> ( 
                                                     <Accordion.Item eventKey={i} key={i}>
                                                         <Accordion.Header>Learner: {user.address}</Accordion.Header>
                                                             {
                                                                 <Accordion.Body>
                                                                     {
-                                                                        user.submissions.map((s, x) => (                                                                    
+                                                                        user.submissions.list.map((s, x) => (                                                                    
                                                                             <Card.Body key={x} className="d-flex"> 
                                                                                 <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer" className='me-auto bd-highlight'>View Submission</a> 
                                                                                                                                                            
                                                                                 {
-                                                                                    x === user.submissions.length-1 &&
-                                                                                        user.role === 'Chief Moderator' && 
+                                                                                   ( x === (user.submissions.list.length - 1) && (user.role === 'Chief Moderator')) 
+                                                                                    && 
                                                                                         <>
                                                                                             <Button variant="outline-danger" className='me-3'
                                                                                                 onClick={()=> setShowModerationSuccess(!showModerationSuccess)} 
@@ -194,39 +204,7 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
 export default Submission
 
 
-const learnerSubmissionList= [
-    {
-        courseId: 1,
-        submissions: [
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn',
-                isApproved : false
-            },
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn',
-                isApproved : false
-            },
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn',
-                isApproved : false
-            },
-        ]
-    },
-    {
-        courseId: 2,
-        submissions: [
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQnxdgsjks45738339v',
-                isApproved : false
-            }            
-        ]
-        
-    }
-]
+
 
 const userSubmissionList = [
     {
