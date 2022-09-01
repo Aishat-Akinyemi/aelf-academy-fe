@@ -34,7 +34,7 @@ const Course = ({ course, user}) => {
                         </Button>)
                     }  
                     
-                    {(user && user.role ==='Admin') && <Link to={`/quest/${course.courseId}`} className='sm-txt p-5'>Evaluate submissions</Link>}
+                    {((user && user.role ==='Admin') || (user && user.role ==='Chief Moderator')) && <Link to={`/quest/${course.courseId}`} className='sm-txt p-5'>Evaluate submissions</Link>}
                     {!user && 'Join Aelf Academy to Start Learning.'}
                     </span>
             </Card.Body>
