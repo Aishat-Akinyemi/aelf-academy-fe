@@ -150,8 +150,7 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                                                                                 <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer" className='me-auto bd-highlight'>View Submission</a> 
                                                                                                                                                            
                                                                                 {
-                                                                                   ( x === (user.submissions.list.length - 1) && (user.role === 'Chief Moderator')) 
-                                                                                    && 
+                                                                                   ( x === (user.submissions.list.length - 1) && (user.role === 'Chief Moderator')) &&                                                                                    
                                                                                         <>
                                                                                             <Button variant="outline-danger" className='me-3'
                                                                                                 onClick={()=> setShowModerationSuccess(!showModerationSuccess)} 
