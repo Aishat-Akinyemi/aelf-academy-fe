@@ -48,7 +48,7 @@ const Courses = ({user}) => {
                 setLoading(false);
             }); 
     }
-    const [courses, setCourses] = useState([]);
+    const [courses, setCourses] = useState();
     const [loading, setLoading] = useState(false);    
    
    
