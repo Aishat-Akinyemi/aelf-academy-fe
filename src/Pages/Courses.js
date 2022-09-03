@@ -7,7 +7,7 @@ import { getAllCourses} from '../utils/Aelf';
 import { fetchDataFromIpfs } from "../utils/Ipfs";
 
 const Courses = ({user}) => {
-    const getCourses =  () => {
+    const getCourses =  async () => {
         getAllCourses().then(
             (rawData)=>{
                 const coursesList = [];
@@ -54,8 +54,7 @@ const Courses = ({user}) => {
    
     useEffect(() => {
         setLoading(true);
-        const courses = getCourses();
-        setCourses(courses);
+        getCourses().then(data => setCourses(data));
         setLoading(false);
       }, [courses]);
     
