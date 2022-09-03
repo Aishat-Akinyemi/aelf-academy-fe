@@ -26,9 +26,10 @@ function App() {
          async (res) => {
             if(res){
               setUserAddress(res);
-              //add useraddress to userINFO
-              let us_info = await getUserInfo(res);
-              us_info.address = res;
+              setUser(await getUserInfo(res));
+              // //add useraddress to userINFO
+              // let us_info = await getUserInfo(res);
+              // us_info.address = res;
               setUser(us_info);
               setCourses(await getAllCourses());
               navigate("/account");
@@ -71,7 +72,7 @@ function App() {
             <Route path='/course/:courseId' element={<Coursedetails/>}/>            
             <Route path='/quest/:courseId' element={<Quest user={user}/>}/>
             <Route path='/account' element={<Account user={user} getUser={getUserDetails}/>}/>
-            <Route path='/entries/:courseId' element={<Submission user={user}/>}/>
+            <Route path='/entries/:courseId' element={<Submission user={user} userAddress={userAddress} />}/>
             {/* <Route path='/' element={}/> */}
             <Route path='*' element={<Home/>}/>
         </Routes>
