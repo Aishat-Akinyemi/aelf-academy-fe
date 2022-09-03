@@ -53,9 +53,10 @@ const Courses = ({user}) => {
    
    
     useEffect(() => {
-        // setLoading(true);
-        getCourses().then(data => setCourses(data));
-        // setLoading(false);
+        setLoading(true);
+        const courses = getCourses();
+        setCourses(courses);
+        setLoading(false);
       }, [courses]);
     
   return (
