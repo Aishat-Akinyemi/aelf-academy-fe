@@ -30,7 +30,7 @@ function App() {
               // //add useraddress to userINFO
               // let us_info = await getUserInfo(res);
               // us_info.address = res;
-              setUser(us_info);
+              // setUser(us_info);
               setCourses(await getAllCourses());
               navigate("/account");
             }
