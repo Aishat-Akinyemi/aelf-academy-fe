@@ -7,7 +7,7 @@ import { getAllCourses} from '../utils/Aelf';
 import { fetchDataFromIpfs } from "../utils/Ipfs";
 
 const Courses = ({user}) => {
-    const getCourse =  () => {
+    const getCourses =  () => {
         getAllCourses().then(
             (rawData)=>{
                 const coursesList = [];
@@ -64,10 +64,10 @@ const Courses = ({user}) => {
             <header className="courses-header mb-0">
                 <h2 className="courses-page-title">About  Aelf academy courses</h2>
                 <p> Enrol in self-paced courses that teach development on Aelf blockchain in various levels from beginner to intermediate and advanced.</p>
-                <Button variant="outline-primary"
+                {/* <Button variant="outline-primary"
                     onClick={forceUpdate}
                 
-                >View All Courses</Button> 
+                >View All Courses</Button>  */}
             </header>
             {!loading ?
                 (<>
