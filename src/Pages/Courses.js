@@ -54,7 +54,7 @@ const Courses = ({user}) => {
    
     useEffect(() => {
         setLoading(true);
-        getCourses().then(data => setCourses(data));
+        getCourses().then(data => setCourses(data)).finally(data => setCourses(data));
         setLoading(false);
       }, [courses]);
     
