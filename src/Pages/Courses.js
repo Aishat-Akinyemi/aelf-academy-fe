@@ -7,46 +7,50 @@ import { getAllCourses} from '../utils/Aelf';
 import { fetchDataFromIpfs } from "../utils/Ipfs";
 
 const Courses = ({user}) => {
-    const getCourses =  async () => {
-        getAllCourses().then(
-            (rawData)=>{
-                const coursesList = [];
-                rawData.map(course => {
-                    if(course.courseId==='1'){
-                        //correct error I committed during testing, TODO remember to remove after deploying a new contract
-                        course.contenturl = 'https://ipfs.io/ipfs/QmWeN3ttqoXJCPttynVBpZa3QE1e5TR9wuFqjPH6K99cSU';
-                    }
-                    fetchDataFromIpfs(course.contenturl).then(
-                        (res) => {
-                            const finalCourseObj= {
-                                courseId : course.courseId,
-                                submissionReward: course.submissionReward,
-                                moderationReward: course.moderationReward,
-                                level: course.level,
-                                introduction: res.data.introduction,
-                                toc: res.data.toc,
-                                challengeDescription: res.data.challengeDescription,
-                                content: res.data.challengeDescription,
-                                courseTitle: course.courseTitle ,
-                              }  
-                              if(course.courseId ==='3'){
-                                finalCourseObj.introduction = 'This course aims to help you setup your local system for smartcontract development on Aelf blockchain protocol.';
-                              } 
-                              return finalCourseObj;
+    const getCourses =  () => {
+        return new Promise(
+            resolve => {
+                getAllCourses().then(
+                    (rawData)=>{
+                        const coursesList = [];
+                        rawData.map(course => {
+                            if(course.courseId==='1'){
+                                //correct error I committed during testing, TODO remember to remove after deploying a new contract
+                                course.contenturl = 'https://ipfs.io/ipfs/QmWeN3ttqoXJCPttynVBpZa3QE1e5TR9wuFqjPH6K99cSU';
+                            }
+                            fetchDataFromIpfs(course.contenturl).then(
+                                (res) => {
+                                    const finalCourseObj= {
+                                        courseId : course.courseId,
+                                        submissionReward: course.submissionReward,
+                                        moderationReward: course.moderationReward,
+                                        level: course.level,
+                                        introduction: res.data.introduction,
+                                        toc: res.data.toc,
+                                        challengeDescription: res.data.challengeDescription,
+                                        content: res.data.challengeDescription,
+                                        courseTitle: course.courseTitle ,
+                                    }  
+                                    if(course.courseId ==='3'){
+                                        finalCourseObj.introduction = 'This course aims to help you setup your local system for smartcontract development on Aelf blockchain protocol.';
+                                    } 
+                                    return finalCourseObj;
+                                })
+                            .then(result => {
+                                coursesList.push(result);
+                                return result;
+                            })
+                            resolve(coursesList);                            
                         })
-                    .then(result => {
-                        coursesList.push(result);
-                        return result;
-                    })
-                    return coursesList;
                     
-                })
-              
-            },
-            (error) => {
-                alert(error.Message);
-                setLoading(false);
-            }); 
+                    },
+                    (error) => {
+                        reject("failed to load courses")
+                        setLoading(false);
+                    }); 
+            }
+        )
+        
     }
     const [courses, setCourses] = useState();
     const [loading, setLoading] = useState(false);    
