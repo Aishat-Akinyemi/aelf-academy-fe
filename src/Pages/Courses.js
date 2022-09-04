@@ -9,7 +9,7 @@ import { fetchDataFromIpfs } from "../utils/Ipfs";
 const Courses = ({user}) => {
     const getCourses =  () => {
         return new Promise(
-            resolve => {
+            (resolve, reject) => {
                 getAllCourses().then(
                     (rawData)=>{
                         const coursesList = [];
@@ -46,6 +46,7 @@ const Courses = ({user}) => {
                     },
                     (error) => {
                         reject("failed to load courses")
+                        
                         setLoading(false);
                     }); 
             }
