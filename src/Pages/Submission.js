@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react'
 import { Button, Stack,  Form, Card, ListGroup, Accordion, ToastContainer, Toast} from 'react-bootstrap';
 import { submitChallenge, getLearnerSubmission, getCourseSubmission, moderateChallenge } from '../utils/Aelf';
 
-const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
+const Submission = ({user, userAddress}) => {
     const [courseTitle, setCourseTitle] = useState("Aelf 101: Getting Started with AElf");
     const [submissionReward, setSubmissionsReward] = useState(50);
     const [moderationReward, setmoderationReward] = useState(20);
     const [courseId, setCourseId] = useState(1);
 
     const getSubmission = async () => { 
-        const submission = await getLearnerSubmission(user.address);
+        const submission = await getLearnerSubmission(userAddress);
         let sub = submission.submissions.find( e => e.courseId == courseId).submissions.list;             
         return sub;
     }
@@ -141,7 +141,7 @@ const Submission = ({user /**courseId, learnerAdd, user.role*/}) => {
                                                 userSubmissions &&
                                                 userSubmissions.map((user, i)=> ( 
                                                     <Accordion.Item eventKey={i} key={i}>
-                                                        <Accordion.Header>Learner: {user.address}</Accordion.Header>
+                                                        <Accordion.Header>Learner: {userAddress}</Accordion.Header>
                                                             {
                                                                 <Accordion.Body>
                                                                     {
