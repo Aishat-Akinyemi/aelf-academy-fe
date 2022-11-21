@@ -27,13 +27,16 @@ function App() {
             if(res){
               setUserAddress(res);
               const user =  await getUserInfo(res);
-              console.log(user);
               if(user){
                 user.address = res;
                 setUser(user);
+                setCourses(await getAllCourses());
+                navigate("/courses");
               }              
-              setCourses(await getAllCourses());
-              navigate("/account");
+              else {
+                setCourses(await getAllCourses());
+                navigate("/account");
+              }
             }
           },
           (err) => {
@@ -43,24 +46,15 @@ function App() {
       console.log(e)       
     }
 }
-    const addNewLearner = (userName) => {    
-      addLearner(userName).then(
-        res => {
-          console.log(`added ${res}`)
-          const user = res;
-          user.address = userAddress;
-          setUser(user);
-        }
-      ).catch(e => {
-        alert(e.Message);
-      })    
-  }
   
   const getUserDetails = async() => {
     try{
       const userInfo = await getUserInfo(userAddress);  
+      if(userInfo){
+        userInfo.address = userAddress;
         setUser(userInfo);           
-        console.log(user);    
+        console.log(user);
+      }            
       } catch(e){
       console.log(e) 
     }
