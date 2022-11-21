@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Button, Stack,  Form, Card,  Accordion, Badge, Modal, Spinner} from 'react-bootstrap';
 import AddCourse from '../components/AddCourse'
 import { useNavigate} from 'react-router-dom';
-import { addLearner, addCourse} from '../utils/Aelf';
+import { addLearner, addCourse, getLearnerSubmission} from '../utils/Aelf';
 import Loader from '../components/Loader';
 import {uploadDataToIpfs} from '../utils/Ipfs';
 
@@ -53,8 +53,9 @@ const Account = ({user, getUser}) => {
     const handleAddLearner =  () => { 
         try{
             (addLearner(username)).then(
-                (res) => {
-                    console.log('added user from account', res);
+                (res) => {   
+                                     
+                    console.log(`added user from account, ${res}`);
                 },
                 (error) => {}
             ).catch(
@@ -73,6 +74,14 @@ const Account = ({user, getUser}) => {
           }   
         
     }
+
+    // const getSubmission = async () => { 
+    //     const result = await getLearnerSubmission(userAddress);
+    //     console.log(result);
+    //     console.log(result.submissions.submissions.list);
+    //     // let sub = submission.submissions.find( e => e.courseId == courseId).submissions.list;             
+        
+    // }
 
 
     return (
@@ -106,12 +115,9 @@ const Account = ({user, getUser}) => {
                                                                         <span className='me-auto bd-highlight'>Course: {courses.find(c => c.CourseId === courseSubmission.courseId).CourseTitle}</span>
                                                                         {courseSubmission.submissions[ courseSubmission.submissions.length - 1].isApproved 
                                                                             &&   <span className='sm-txt'>
-                                                                            <span className='me-3'> Moderated by <h5 className='in-line ms-3'><Badge bg="primary">{courseSubmission.submissions[courseSubmission.submissions.length - 1].moderatorUsernam}</Badge></h5> </span> 
-                                                                                <span> Reward<h5 className='in-line ms-3'><Badge bg="primary"> {courses.find(c => c.CourseId === courseSubmission.courseId).SubmissionReward} </Badge></h5>                                                                      </span>
-                                                                                
-                                                                                    
-                                                                            </span>
-                                                                        
+                                                                                    <span className='me-3'> Moderated by <h5 className='in-line ms-3'><Badge bg="primary">{courseSubmission.submissions[courseSubmission.submissions.length - 1].moderatorUsernam}</Badge></h5> </span> 
+                                                                                    <span> Reward<h5 className='in-line ms-3'><Badge bg="primary"> {courses.find(c => c.CourseId === courseSubmission.courseId).SubmissionReward} </Badge></h5></span>
+                                                                                </span>
                                                                         } 
                                                                     </Accordion.Header>
                                                                         {

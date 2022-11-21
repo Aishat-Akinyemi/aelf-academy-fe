@@ -543,132 +543,47 @@ export function getCourse(courseId){
   })
 }
 
-
-// export function getAllCourses(){
-//   if (!window.Contract) {
-//     alert('not yet initialized');
-//     return;
-//   }
-//   return new Promise((resolve, reject) =>{
-//     window.Contract.GetCourses.call(
-//       (err, result) => {
-//       if(result.error === 0){
-//        const courses = result.result.courseList;
-//        const courseList =    
-//        courses.map(course => {
-//           if(course.courseId==='1'){
-//             //correct error I committed during testing, TODO remember to remove after deploying a new contract
-//             course.contenturl = 'https://ipfs.io/ipfs/QmWeN3ttqoXJCPttynVBpZa3QE1e5TR9wuFqjPH6K99cSU';
-//           }
-//           fetchDataFromIpfs(course.contenturl).then(
-//             (res)=> {              
-//               const finalCourseObj= {
-//                 courseId : course.courseId,
-//                 submissionReward: course.submissionReward,
-//                 moderationReward: course.moderationReward,
-//                 level: course.level,
-//                 introduction: res.data.introduction,
-//                 toc: res.data.toc,
-//                 challengeDescription: res.data.challengeDescription,
-//                 content: res.data.challengeDescription,
-//                 courseTitle: course.courseTitle ,
-//               }  
-//               if(course.courseId ==='3'){
-//                 finalCourseObj.introduction = 'This course aims to help you setup your local system for smartcontract development on Aelf blockchain protocol.';
-//               } 
-//               //was here
-//            return finalCourseObj;
-
-//             } );
-//        });
-//        resolve( Promise.all(courseList));
-//       }
-      
-//       else {
-//         const {Code, Message} = result.errorMessage.message;
-//         reject({
-//           Code, Message}
-//         );
-//       }
-//     });
-//   })
-// }
-
-
-
-// export function getAllCourses(){
-//   try{
-//     if (!window.Contract) {
-//       alert('not yet initialized');
-//       return;
-//     }
-//     window.Contract.GetCourses.call(
-//       (err, result) => {
-//       if(result.error === 0){
-//        const courses = result.result.courseList;
-//        const courseList =  courses.map(course => {
-//         const courseItem = new Promise( async(resolve) => {
-//           if(course.courseId==='1'){
-//             //correct error I committed during testing, TODO remember to remove after deploying a new contract
-//             course.contenturl = 'https://ipfs.io/ipfs/QmWeN3ttqoXJCPttynVBpZa3QE1e5TR9wuFqjPH6K99cSU';
-//           }
-//           const res = await fetchDataFromIpfs(course.contenturl);
-//           const finalCourseObj= {
-//             courseId : course.courseId,
-//             submissionReward: course.submissionReward,
-//             moderationReward: course.moderationReward,
-//             level: course.level,
-//             introduction: res.data.introduction,
-//             toc: res.data.toc,
-//             challengeDescription: res.data.challengeDescription,
-//             content: res.data.challengeDescription,
-//             courseTitle: course.courseTitle ,
-//           }  
-//           if(course.courseId ==='3'){
-//             finalCourseObj.introduction = 'This course aims to help you setup your local system for smartcontract development on Aelf blockchain protocol.';
-//           } 
-//            resolve(finalCourseObj);
-//         });
-//           return courseItem; 
-//        });
-//         // return Promise.all(courseList);
-//         const ff =  Promise.all(courseList);
-//         ff.then(
-//           res => {
-//             return res;
-//           }
-//         )
-//       }      
-//       else {
-//         const {Code, Message} = result.errorMessage.message;
-//         return Promise.reject({
-//           Code, Message});
-//       }
-//     });
-//   } catch (e) {
-//     console.log(e);
-//   } 
-// }
-
-export function getAllCourses(){
+export async function getAllCourses() {
   if (!window.Contract) {
     alert('not yet initialized');
     return;
   }
-  return new Promise((resolve, reject) =>{
-    window.Contract.GetCourses.call(
-      (err, result) => {
-      if(result.error === 0){
-        resolve(result.result.courseList);
-      }
-      else {
-        const {Code, Message} = result.errorMessage.message;
-        reject({
-          Code, Message}
-        );
-      }
+  try {
+    const courseList = [];
+    const result = await window.Contract.GetCourses.call();
+    const courses = result.result.courseList;
+    courses.forEach(course => {
+      if(course.courseId === '1' | course.courseId === '3'| course.courseId ==='5') {
+        if(course.courseId==='1'){
+          //correct error I committed during testing, TODO remember to remove after deploying a new contract
+          course.contenturl = 'https://ipfs.io/ipfs/QmWeN3ttqoXJCPttynVBpZa3QE1e5TR9wuFqjPH6K99cSU';
+        }       
+          const courseItem = new Promise(async (resolve) => {
+            const dataFromIpfs = await fetchDataFromIpfs(course.contenturl);
+            const finalCourseObj= {
+              courseId : course.courseId,
+              submissionReward: course.submissionReward,
+              moderationReward: course.moderationReward,
+              level: course.level,
+              introduction: dataFromIpfs.data.introduction,
+              toc: dataFromIpfs.data.toc,
+              challengeDescription: dataFromIpfs.data.challengeDescription,
+              content: dataFromIpfs.data.challengeDescription,
+              courseTitle: course.courseTitle ,
+            }  
+            if(course.courseId ==='3'){
+              finalCourseObj.introduction = 'This course aims to help you setup your local system for smartcontract development on Aelf blockchain protocol.';
+            } 
+            resolve(finalCourseObj);
+          });
+          courseList.push(courseItem);
+      }      
     });
-  })
+    return Promise.all(courseList);
+   
+  } catch (e) {
+    console.log({ e });
+  }
 }
 
 
@@ -741,65 +656,3 @@ export function getFundingHistory(){
 
 
 
-const courseList = [
-  {
-      courseId : 1,
-      submissionReward : 50,
-      moderationReward : 20,
-      level : 1,
-      contentUrl : '',
-      isActive : true,
-      introduction: 'This course aims to teach you how to setup your local system for smartcontract development on Aelf blockchain protocol. You will be introduced to the Aelf-toolchainb',
-      courseTitle: 'AELF 101: Getting Started with AElf'
-  },
-  {
-      courseId : 2,
-      submissionReward : 100,
-      moderationReward : 30,
-      level : 2,
-      contentUrl : '',
-      isActive : true,
-      introduction: 'This course aims to help you understand the architecture of Aelf protocol.',
-      courseTitle: 'AELF 201: Aelf Architecture'
-  },
-  {
-      courseId : 3,
-      submissionReward : 200,
-      moderationReward : 70,
-      level : 3,
-      contentUrl : '',
-      isActive : true,
-      introduction: 'This course aims to teach you how to build and deploy your first smartcontract with C# on Aelf.',
-      courseTitle: 'AELF 301: Build and deploy Hello World smart contract'
-  },
-  {
-      courseId : 4,
-      submissionReward : 200,
-      moderationReward : 70,
-      level : 4,
-      contentUrl : '',
-      isActive : true,
-      introduction: 'This course aims to teach you learn more advaced smartcontract development techniques.',
-      courseTitle: 'AELF 401: Advanced smart contract development'
-  },
-  {
-      courseId : 5,
-      submissionReward : 150,
-      moderationReward : 40,
-      level : 5,
-      contentUrl : '',
-      isActive : true,
-      introduction: 'This course aims to teach you how to call your smartcontract from the front end using aelf-sdk and aelf browser extension',
-      courseTitle: 'AELF 501: Integrate smartcontract with Frontend'
-  },
-  {
-      courseId : 6,
-      submissionReward : 150,
-      moderationReward : 40,
-      level : 6,
-      contentUrl : '',
-      isActive : true,
-      introduction: 'This course aims to teach you how to develop highly secure and performant smart contracts on the Aelf blockchain.',
-      courseTitle: 'AELF 601: Smart contract security and optimisation',
-  }      
-]
