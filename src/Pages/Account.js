@@ -53,8 +53,7 @@ const Account = ({user, getUser}) => {
     const handleAddLearner =  () => { 
         try{
             (addLearner(username)).then(
-                (res) => {   
-                                     
+                (res) => {                                       
                     console.log(`added user from account, ${res}`);
                 },
                 (error) => {}

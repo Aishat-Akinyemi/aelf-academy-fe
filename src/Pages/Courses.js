@@ -14,7 +14,7 @@ const Courses = ({user}) => {
         try{
             setLoading(true);
             const courses = await getAllCourses();
-            setCourses(courses)
+            setCourses(courses);
         } catch (error){
             console.log({ error });
         } finally {

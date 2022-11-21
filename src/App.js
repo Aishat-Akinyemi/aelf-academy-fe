@@ -26,7 +26,12 @@ function App() {
          async (res) => {
             if(res){
               setUserAddress(res);
-              setUser(await getUserInfo(res));
+              const user =  await getUserInfo(res);
+              console.log(user);
+              if(user){
+                user.address = res;
+                setUser(user);
+              }              
               setCourses(await getAllCourses());
               navigate("/account");
             }
@@ -41,8 +46,10 @@ function App() {
     const addNewLearner = (userName) => {    
       addLearner(userName).then(
         res => {
-          console.log(`added `, res)
-          setUser(res);
+          console.log(`added ${res}`)
+          const user = res;
+          user.address = userAddress;
+          setUser(user);
         }
       ).catch(e => {
         alert(e.Message);
