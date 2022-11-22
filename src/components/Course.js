@@ -1,6 +1,4 @@
-import { Card, Button, Col } from 'react-bootstrap'
-import Proptypes, { object } from 'prop-types';
-import {PerformACall} from '../utils/Aelf'
+import { Card, Button, Col } from 'react-bootstrap';
 import {useNavigate, Link} from 'react-router-dom';
 
 
@@ -27,14 +25,14 @@ const Course = ({ course, user}) => {
                    {
                         (user && user.role === 'Learner') &&
                         (<Button variant="outline-primary" ><span className='p-3' onClick={() => {
-                        navigate(`/course/${course.courseId}`);
+                        navigate(`/course/${course.courseId}`, {state: course});
                         }}
                         >
                         Start Now</span>
                         </Button>)
                     }  
                     
-                    {((user && user.role ==='Admin') || (user && user.role ==='Chief Moderator')) && <Link to={`/quest/${course.courseId}`} className='sm-txt p-5'>Evaluate submissions</Link>}
+                    {((user && user.role ==='Admin') || (user && user.role ==='Chief Moderator')) && <Link to={`/quest/${course.courseId}`} className='sm-txt p-5' state={course}>Evaluate submissions</Link>}
                     {!user && 'Join Aelf Academy to Start Learning.'}
                     </span>
             </Card.Body>
@@ -42,11 +40,6 @@ const Course = ({ course, user}) => {
     </Col>
   )
 }
-
-// Course.propTypes = {
-//     course : PropTypes.instanceOf(Object),
-//     // Proptypes.object.isRequired
-// };
 
 export default Course
 

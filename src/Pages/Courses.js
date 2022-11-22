@@ -24,7 +24,7 @@ const Courses = ({user}) => {
 
      useEffect(() => {
         getAndSetCourses();
-      }, []);
+      }, [user]);
 
   return (
     <div>

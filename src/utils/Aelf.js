@@ -592,21 +592,25 @@ export function getCourseSubmission(courseId){
     alert('not yet initialized');
     return;
   }
-  return new Promise((resolve, reject) =>{
-    window.Contract.GetCourseSubmission.call(
-      {value: courseId},
-      (err, result) => {
-      if(result.error === 0){
-        resolve(result.result);
-      }
-      else {
-        const {Code, Message} = result.errorMessage.message;
-        reject({
-          Code, Message}
-        );
-      }
-    });
-  })
+  try{
+      return new Promise((resolve, reject) =>{
+        window.Contract.GetCourseSubmission.call(
+          {value: courseId},
+          (err, result) => {
+          if(result.error === 0){
+            resolve(result.result);
+          }
+          else {
+            const {Code, Message} = result.errorMessage.message;
+            reject({
+              Code, Message}
+            );
+          }
+        });
+      })
+  } catch(e){
+    console.log({ e });
+  }
 }
 
 export function getLearnerSubmission(learnerAddress){

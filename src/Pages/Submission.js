@@ -1,22 +1,26 @@
 import React, {useState, useEffect} from 'react'
 import { Button, Stack,  Form, Card, ListGroup, Accordion, ToastContainer, Toast} from 'react-bootstrap';
 import { submitChallenge, getLearnerSubmission, getCourseSubmission, moderateChallenge } from '../utils/Aelf';
+import {useNavigate, useLocation} from 'react-router-dom';
 
-const Submission = ({user, userAddress}) => {
-    const [courseTitle, setCourseTitle] = useState("Aelf 101: Getting Started with AElf");
-    const [submissionReward, setSubmissionsReward] = useState(50);
-    const [moderationReward, setmoderationReward] = useState(20);
-    const [courseId, setCourseId] = useState(1);
+const Submission = ({user}) => {
+    const location = useLocation();
+    const course = location.state;
 
     const getSubmission = async () => { 
-        const submission = await getLearnerSubmission(userAddress);
-        let sub = submission.submissions.find( e => e.courseId == courseId).submissions.list;             
-        return sub;
+       if(user.role === 'Learner') { 
+            const submission = await getLearnerSubmission(user.address);
+            let sub = submission.submissions.find( e => e.courseId == course.courseId).submissions.list;             
+            return sub;
+       }
     }
+    
     const getCourseSubmissionList = async () => {
-        const allSubmissions = await getCourseSubmission(courseId);
-        let sub =  allSubmissions.userSubmissions;
-        return sub;
+       if(user.role !== "Learner"){
+            const allSubmissions = await getCourseSubmission(course.courseId);
+            let sub =  allSubmissions.userSubmissions;
+            return sub;
+       }
     }
 
 
@@ -25,9 +29,7 @@ const Submission = ({user, userAddress}) => {
     useEffect(() => {     
            getSubmission().then(data => setSubmissionList(data));
            getCourseSubmissionList().then(data => setUserSubmissions(data));
-
-         }, [submissionList, userSubmissionList]);
-        
+         }, [submissionList, userSubmissions]);       
         
     
     const [currentSubmissionInput, setCurrentSubmissionInput] = useState('');
@@ -39,7 +41,7 @@ const Submission = ({user, userAddress}) => {
     
     const handleSubmission =  () => {       
         const data = {
-            courseId: courseId,
+            courseId: course.courseId,
             submissionUrl: currentSubmissionInput
         }
         try {
@@ -67,10 +69,10 @@ const Submission = ({user, userAddress}) => {
   return (
     <div className='contain mm position-relative'>
             <header>
-                <h2>{user.role === 'Learner' && `Your`} Submissions to Quest: {courseTitle}</h2>
+                <h2>{user.role === 'Learner' && `Your`} Submissions to Quest: {course.courseTitle}</h2>
                 <Stack direction="horizontal" gap={4} className="my-4">
-                  <div className="bg-light border p-1 sm-txt">Submission Reward: <span className='reward'>{submissionReward} ELF</span></div>
-                  <div className="bg-light border p-1 sm-txt">Moderation Reward: <span className="reward">{moderationReward} ELF</span></div>
+                  <div className="bg-light border p-1 sm-txt">Submission Reward: <span className='reward'>{course.submissionReward} ELF</span></div>
+                  <div className="bg-light border p-1 sm-txt">Moderation Reward: <span className="reward">{course.moderationReward} ELF</span></div>
                </Stack>
             </header>
             <div className=''>
@@ -133,24 +135,23 @@ const Submission = ({user, userAddress}) => {
                                     { `${user.role === 'Chief Moderator'? 'Review': ''} Quest Submissions`} 
                                 </Card.Header>
                                 <Card.Body>
-                                    {/* //userSubmissions? */}
-                                    {
-                                         
+                                    {                                         
                                         <Accordion>
                                             { 
-                                                userSubmissions &&
-                                                userSubmissions.map((user, i)=> ( 
+                                                userSubmissions ?
+                                                userSubmissions.map((learner, i)=> ( 
                                                     <Accordion.Item eventKey={i} key={i}>
-                                                        <Accordion.Header>Learner: {userAddress}</Accordion.Header>
+                                                        <Accordion.Header>Learner: {learner.address}</Accordion.Header>
                                                             {
                                                                 <Accordion.Body>
                                                                     {
-                                                                        user.submissions.list.map((s, x) => (                                                                    
+                                                                        learner.submissions.list.map((s, x) => (                                                                    
                                                                             <Card.Body key={x} className="d-flex"> 
                                                                                 <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer" className='me-auto bd-highlight'>View Submission</a> 
                                                                                                                                                            
                                                                                 {
-                                                                                   ( x === (user.submissions.list.length - 1) && (user.role === 'Chief Moderator')) &&                                                                                    
+                                                                                   ( 
+                                                                                        (s.moderatedBy === null) && (user.role === 'Chief Moderator')) &&                                                                                    
                                                                                         <>
                                                                                             <Button variant="outline-danger" className='me-3'
                                                                                                 onClick={()=> setShowModerationSuccess(!showModerationSuccess)} 
@@ -168,6 +169,8 @@ const Submission = ({user, userAddress}) => {
                                                         
                                                     </Accordion.Item>
                                                 ))
+                                                :
+                                                <p>No submissions yet for this course</p>
                                             }
                                         </Accordion>
                                     } 
@@ -185,7 +188,7 @@ const Submission = ({user, userAddress}) => {
                     <Toast.Header>                    
                     <strong className="me-auto"> Congrats on submitting your solution 🚀🚀 </strong>
                     </Toast.Header>
-                    <Toast.Body>Successfully submitted solution to quest: {courseTitle}</Toast.Body>
+                    <Toast.Body>Successfully submitted solution to quest: {course.courseTitle}</Toast.Body>
                 </Toast>
                 <Toast show={showModerationSuccess} onClose={()=> setShowModerationSuccess(!showModerationSuccess)}>
                     <Toast.Header>                    
@@ -205,36 +208,3 @@ export default Submission
 
 
 
-const userSubmissionList = [
-    {
-        address: 'dhjak26536728bdgfchdj',
-        submissions: [
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn',
-                isApproved : ''
-            },
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn',
-                isApproved : ''
-            },
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '',
-                isApproved : false
-            },
-        ]
-    },
-    {
-        address: 'dhsks27830373',
-        submissions: [
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQnxdgsjks45738339v',
-                isApproved : false
-            }            
-        ]
-        
-    }
-]
