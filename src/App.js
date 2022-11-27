@@ -14,7 +14,7 @@ import Account from './Pages/Account';
 import Submission from './Pages/Submission'
 import {Notification} from './components/Notification'
 
-import { login, getAcademyInfo, getUserInfo, addLearner, getAllCourses} from './utils/Aelf';
+import { login, getUserInfo, getAllCourses} from './utils/Aelf';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -49,7 +49,8 @@ function App() {
       console.log(e)       
     }
 }
-  
+
+
   const getUserDetails = async() => {
     try{
       const userInfo = await getUserInfo(userAddress);  

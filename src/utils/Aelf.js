@@ -55,26 +55,6 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
   
 });
 
-// const getNightaelfInstance = () => {          
-//     setTimeout(async () => {
-//       const result = await getNightly();  
-//       if(result) {
-//         const aelf = new window.NightElf.AElf({
-//           // Enter your test address in this location
-//           httpProvider: [
-//             endpoint
-//           ],
-//           appName
-//         });      
-//         return (aelf);
-//       }   
-//       console.log(`not found`);
-//       throw new Error('timeout / can not find NightElf / please install the extension');
-//     }, 3000);
-// }
-
-
-
   export function login() {     
       return new Promise((resolve, reject) => {
         try{
@@ -101,8 +81,7 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
                         contractName: aelfEnv.contractName,
                         description: 'AelfAcademy smartcontract',
                         github: ''
-                      }]
-                    }
+                      }]}
                   }, (err, result) => {
                     const wallet = JSON.parse(result.detail);
                     if (!wallet) {
@@ -127,44 +106,6 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
         }
       })      
     } 
-
-// export async function login() {
-//     try{
-//       const aelf = await getNightaelfInstance();
-//       const chainStatus = await aelf.chain.getChainStatus();
-//       if(chainStatus.error!==0){
-//         throw Error('Error connecting to chain.');
-//       }
-//       const chainId =  result.result.ChainId;
-//       if (!chainId) {            
-//         throw Error('Error connecting to chain.');
-//       }
-//       const result = await aelf.login({ appName,
-//                                         chainId: chainId,
-//                                         payload: {
-//                                           method: 'LOGIN',
-//                                           contracts: [{
-//                                             chainId: chainId,
-//                                             contractAddress: aelfEnv.contractAddress,
-//                                             contractName: aelfEnv.contractName,
-//                                             description: 'AelfAcademy smartcontract',
-//                                             github: ''
-//                                           }]
-//                                         }
-//                                       });
-//       const wallet = JSON.parse(result.detail);
-//       if (!wallet) {
-//         throw Error('Click Login to connect wallet to Aelf Academy');
-//       }                
-//       const contract = aelf.chain.contractAt(aelfEnv.contractAddress, wallet);
-//       window.Contract = contract;
-//       return wallet.address;
-//     } catch(e) {
-//         throw Error("Please install Aelf Extension and try again");
-//     }
-           
-// } 
-  
 
   export function loginOriginal() {
     getNightaelfInstance.then(
@@ -318,9 +259,7 @@ export async function getResul(txId){
   const aelf = await getNightaelfInstance;
   const result = await aelf.chain.getTxResult(txId)
   if(result.error!==0) {
-    const message = result.errorMessage.message;
-    // let err = {
-    //   Message: message}
+    const message = result.errorMessage.message; 
     throw Error(message);                 
   }
   if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){            
@@ -330,9 +269,6 @@ export async function getResul(txId){
     const {Status, Logs} =  result.result
     return ({Status, Logs});             
   } 
-  // setTimeout(() => {
-    
-  // }, 3000)
   }
 
 
@@ -451,39 +387,6 @@ export async function addAdmin(addUserInput){
  * or a rejected promise containing the error message
  * @type {(moderateChallengeInput: {courseId: number, learnerId : string, isApproved : bool} => Promise)}
  */
-//  export async function moderateChallenge(moderateChallengeInput){
-//   if (!window.Contract) {
-//     alert('not yet initialized');
-//     return;
-//   }
-//   try{
-//     return new  Promise((resolve, reject) => {
-//       window.Contract.ModerateChallenge(moderateChallengeInput, 
-//         (error, result) => {
-//         if(result.error!==0) {
-//           const message = result.errorMessage.message;
-//             return reject({
-//               Message: message}
-//             );
-//         } else {
-//           try {
-//             // const txId = result.result.TransactionId;
-//             // resolve(getResult(txId));
-//             const txId = result.result.TransactionId;
-//             getResult(txId).then(
-//               (res) =>  resolve(res),
-//               (err) => reject(err)
-//             )
-//           } catch(e){
-//               reject(e)
-//           }
-//         }
-//       });
-//     })
-//   } catch(e){
-//       return e
-//   }
-// }
 export async function moderateChallenge(moderateChallengeInput){
   if (!window.Contract) {
     alert('not yet initialized');
@@ -534,36 +437,6 @@ export async function moderateChallenge(moderateChallengeInput){
       return e
   }
 }
-
-// export async function getResult(txId){ 
-    
-//       const aelf = await getNightaelfInstance;
-//       setTimeout(() => {
-//         return new Promise((resolve, reject) => {
-//         try{
-//           aelf.chain.getTxResult(txId, (err, result) => {
-//             console.log(result);
-//           if(result.error!==0) {
-//               const message = result.errorMessage.message;
-//                 return reject({
-//                   Message: message}
-//                 );                 
-//             }
-//            else if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){
-//                return reject("Action failed!");          
-//             } 
-//             else {
-//               const {Status, Logs} =  result.result
-//                return resolve({Status, Logs});             
-//             }
-//           });
-//         } catch(e) {
-//           alert(e);
-//         }
-//         })
-
-//       }, 1000);
-// }
 
 export async function getResult(txId){    
   const aelf = await getNightaelfInstance;
@@ -800,6 +673,17 @@ export function getFundingHistory(){
 }
 
 
-
-
-
+export async function logOut() { 
+    const aelf = await getNightaelfInstance;
+    console.log(aelf.chain);
+    console.log(await aelf.logout({
+      // appName,
+      chainId: aelfEnv.chainId,     
+      payload: {  
+        method: 'REMOVE_PERMISSION',    
+        contractAddress: aelfEnv.contractAddress,
+      }
+    }));
+    const newaelf = await getNightaelfInstance;
+    console.log(aelf);
+} 

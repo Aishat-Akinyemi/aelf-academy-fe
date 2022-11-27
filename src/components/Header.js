@@ -59,7 +59,6 @@ const Header = ({user, login}) => {
             }
              
             </li>
-
         </ul>
   </nav>
   

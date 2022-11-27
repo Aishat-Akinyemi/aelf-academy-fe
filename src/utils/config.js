@@ -19,6 +19,7 @@ function environment(env) {
             suffix: 'AELF'
           },
           tokenSymbol: 'ELF',
+          chainId: "tDVW"
         };
         case "local":
             return {

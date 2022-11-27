@@ -33,9 +33,8 @@ const Account = ({user, getUser}) => {
             };
             await addCourse(newCourseData);          
             toast.success(<NotificationSuccess text="Course Added successfully"/>)
-        } catch(e) {          
-            console.log(e);
-            toast.error(<NotificationError text={` Error adding course.  ${e}`}/>)            
+        } catch(e) {   
+            toast.error(<NotificationError text={` Error adding course.`}/>)            
         } finally {
             setLoading(false);
         }         
@@ -154,8 +153,8 @@ const Account = ({user, getUser}) => {
                                                                         <span className='me-auto bd-highlight'>Course: {courses.find(c => c.courseId == courseSubmission.courseId).courseTitle}</span>
                                                                         {courseSubmission.submissions.list[ courseSubmission.submissions.list.length - 1].isApproved 
                                                                             &&   <span className='sm-txt'>
-                                                                                    <span className='me-3'> Moderated by <h5 className='in-line ms-3'><Badge bg="primary">{courseSubmission.submissions.list[courseSubmission.submissions.list.length - 1].moderatedBy}</Badge></h5> </span> 
-                                                                                    <span> Reward<h5 className='in-line ms-3'><Badge bg="primary"> {courses.find(c => c.courseId === courseSubmission.courseId).submissionReward} </Badge></h5></span>
+                                                                                    <span className='me-3'> Moderated by {courseSubmission.submissions.list[courseSubmission.submissions.list.length - 1].moderatedBy}</span> 
+                                                                                    <span> Reward {courses.find(c => c.courseId === courseSubmission.courseId).submissionReward}</span>
                                                                                 </span>
                                                                         } 
                                                                     </Accordion.Header>
@@ -214,7 +213,12 @@ const Account = ({user, getUser}) => {
                         aria-labelledby="contained-modal-title-vcenter"
                         centered                    
                     >
-                        <Modal.Header>
+                        <Modal.Header 
+                        closeButton
+                        onHide={ ()=> {
+                            navigate("/home");
+                        } }
+                        >
                         <Modal.Title>Create Learner Profile</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>

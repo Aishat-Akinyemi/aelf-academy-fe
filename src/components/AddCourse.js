@@ -15,8 +15,20 @@ const AddCourse = ({addCourse}) => {
 
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+                                setShow(false);
+                                setTitle('');
+                                setLevel(0);
+                                setSubmissionReward(0);
+                                setModerationReward(0);
+                                setIntroduction('');
+                                setToc([]);
+                                setChallengeDescription('');
+                                setContent(''); 
+                            
+                            };
     const handleShow = () => setShow(true);
+
     return (
                 <>
                     <Button
@@ -141,7 +153,7 @@ const AddCourse = ({addCourse}) => {
                         </Modal.Body>
                         <Modal.Footer>
                         <Button variant="primary"                        
-                            disabled = {!isFormValid}
+                            disabled = {!isFormValid()}
                             onClick = {() => {
                                 addCourse({ title,
                                             level,
