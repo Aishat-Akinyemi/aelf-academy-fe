@@ -2,69 +2,105 @@ import React, {useState, useEffect} from 'react'
 import { Button, Stack,  Form, Card, ListGroup, Accordion, ToastContainer, Toast} from 'react-bootstrap';
 import { submitChallenge, getLearnerSubmission, getCourseSubmission, moderateChallenge } from '../utils/Aelf';
 import {useNavigate, useLocation} from 'react-router-dom';
+import UserSubmission from '../components/UserSubmission';
+import SubmissionItem from '../components/SubmissionItem';
+import { NotificationSuccess, NotificationError } from '../components/Notification';
+import Loader from '../components/Loader';
+import { toast } from 'react-toastify';
+
 
 const Submission = ({user}) => {
     const location = useLocation();
-    const course = location.state;
+    const course = location.state;    
+    const [submissionList, setSubmissionList] = useState(); 
+    const [userSubmissions, setUserSubmissions] = useState();
+    const [loading, setLoading] = useState(false);
 
     const getSubmission = async () => { 
        if(user.role === 'Learner') { 
-            const submission = await getLearnerSubmission(user.address);
-            let sub = submission.submissions.find( e => e.courseId == course.courseId).submissions.list;             
-            return sub;
+           try { 
+                setLoading(true);
+                const submission = await getLearnerSubmission(user.address);
+                let sub = submission.submissions.find( e => e.courseId == course.courseId).submissions.list;             
+                return sub;
+            } catch (error) {
+                console.log({ error });
+            } finally {
+                setLoading(false);
+            }
        }
     }
     
-    const getCourseSubmissionList = async () => {
-       if(user.role !== "Learner"){
-            const allSubmissions = await getCourseSubmission(course.courseId);
-            let sub =  allSubmissions.userSubmissions;
-            return sub;
-       }
+    const getCourseSubmissionList = async () => {      
+       try { 
+            if(user.role !== "Learner"){
+                const allSubmissions = await getCourseSubmission(course.courseId);
+                let sub =  allSubmissions.userSubmissions;
+                return sub;
+        }
+        } catch (error) {
+            console.log({ error });
+        } finally {
+            setLoading(false);
+        }
     }
 
+   const moderate = (learnerId, isApproved) => {
+        try{
+            setLoading(true)
+            toast(<NotificationSuccess text={`${isApproved? 'Approving': 'Rejecting'} submission...`}/>) ;
+            moderateChallenge({
+                    courseId: course.courseId,
+                    learnerId: learnerId,
+                    isApproved: isApproved
+                }).then(
+                    (res) =>{
+                        console.log("successfully moderated");
+                        toast.success(<NotificationSuccess text={` Successfully ${isApproved? 'Approved': 'Rejected'} submission.`}/>) ;
+                        getCourseSubmissionList();
+                    },
+                    (err) => {
+                        console.log({err});
+                        toast(<NotificationError text={err.message}/>) 
+                    }
+                )               
+        } catch(e){
+            console.log({e});
+            toast(<NotificationError text={e.message}/>) 
+        } finally {
+            setLoading(false);
+        }
 
-    const [submissionList, setSubmissionList] = useState(); 
-    const [userSubmissions, setUserSubmissions] = useState();
-    useEffect(() => {     
-           getSubmission().then(data => setSubmissionList(data));
-           getCourseSubmissionList().then(data => setUserSubmissions(data));
-         }, [submissionList, userSubmissions]);       
-        
-    
-    const [currentSubmissionInput, setCurrentSubmissionInput] = useState('');
-    const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
-    const [showModerationSuccess, setShowModerationSuccess] = useState(false);
+    }
 
-
-  
-    
-    const handleSubmission =  () => {       
+    const handleSubmission = async (value) => {
+        setLoading(true);  
+        if (!(value.startsWith('https://github.com/') || value.startsWith('https://gist.github.com/') || value.startsWith('www.github.com/'))) {
+            setLoading(false);
+            toast.error(<NotificationError text="Invalid Github url."/>);
+            setLoading(false);
+            return;
+        }     
         const data = {
             courseId: course.courseId,
-            submissionUrl: currentSubmissionInput
-        }
+            submissionUrl: value
+        };
         try {
-            (submitChallenge(data)).then(
-                (res) => {
-                    console.log(res);
-                },
-                (error) => {}
-            ).catch(
-                (err) => {
-                    console.log(err)
-                } 
-            ).finally(
-              () => {
-                getSubmission();                
-                setShowSubmissionSuccess(!showSubmissionSuccess); 
-              }
-                
-            )            
+           await (submitChallenge(data));
+           toast(<NotificationSuccess text={`Submitted successfully`}/>) ;
+           getSubmission();                       
           } catch(e){
-            console.log(e) 
-          }   
+            toast.error(<NotificationError text={e.Message}/>);
+          } finally{
+            setLoading(false);
+          } 
     }
+
+    
+    useEffect(() => {     
+        getSubmission().then(data => setSubmissionList(data));
+        getCourseSubmissionList().then(data => setUserSubmissions(data));
+    }, [submissionList, userSubmissions, handleSubmission]);  
 
   return (
     <div className='contain mm position-relative'>
@@ -79,101 +115,34 @@ const Submission = ({user}) => {
                 {
                     user.role === 'Learner' 
                     ?
-                    <>                    
-                        {
-                        ((submissionList &&
-                        !submissionList[submissionList.length - 1].isApproved) || submissionList ==null) &&
-                        <Card border='primary' className='mb-5'>
-                            <Card.Header>
-                                Submit Solution
-                            </Card.Header>
-                            <Card.Body>
-                                <Stack direction="horizontal" gap={3}>
-                                    <Form.Control 
-                                        className="me-auto" 
-                                        placeholder="Enter link to the github repo or gist..." 
-                                        value={currentSubmissionInput}
-                                        onChange= { e => setCurrentSubmissionInput(e.target.value)}
-                                    />
-                                    <Button variant="primary" disabled={currentSubmissionInput.length<10}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleSubmission(); 
-                                            }}
-                                    >Submit</Button>
-                                </Stack>
-                            </Card.Body>
-                        </Card>
-                        }
-                
-                
-                    {
-                        submissionList &&
-                        <Card className=''>
-                            <Card.Header>
-                                Previous Submissions
-                            </Card.Header>
-                            <Card.Body>
-                            <ListGroup variant="flush">{
-                                submissionList &&
-                                submissionList.map((s, i)=> (
-                                    <ListGroup.Item key={i} className='border p-3'>
-                                        <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer">View Submission</a>
-                                                                        
-                                    </ListGroup.Item>
-                                    
-                                )) 
-                                }                        
-                            </ListGroup>
-                            </Card.Body>
-                        </Card>     
+                    <>
+                    {!loading?
+                        (
+                        <UserSubmission submissionList={submissionList} handleSubmission={handleSubmission}/>
+                        ):
+                        <Loader/>
                     }
                     </>
+
                     :<>
                        { <Card>
                                 <Card.Header>
                                     { `${user.role === 'Chief Moderator'? 'Review': ''} Quest Submissions`} 
                                 </Card.Header>
                                 <Card.Body>
-                                    {                                         
+                                {!loading?
+                                    (                                      
                                         <Accordion>
                                             { 
                                                 userSubmissions ?
-                                                userSubmissions.map((learner, i)=> ( 
-                                                    <Accordion.Item eventKey={i} key={i}>
-                                                        <Accordion.Header>Learner: {learner.address}</Accordion.Header>
-                                                            {
-                                                                <Accordion.Body>
-                                                                    {
-                                                                        learner.submissions.list.map((s, x) => (                                                                    
-                                                                            <Card.Body key={x} className="d-flex"> 
-                                                                                <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer" className='me-auto bd-highlight'>View Submission</a> 
-                                                                                                                                                           
-                                                                                {
-                                                                                   ( 
-                                                                                        (s.moderatedBy === null) && (user.role === 'Chief Moderator')) &&                                                                                    
-                                                                                        <>
-                                                                                            <Button variant="outline-danger" className='me-3'
-                                                                                                onClick={()=> setShowModerationSuccess(!showModerationSuccess)} 
-                                                                                            >Reject</Button>
-                                                                                            <Button variant="primary"
-                                                                                                onClick={()=> setShowModerationSuccess(!showModerationSuccess)} 
-                                                                                            >Approve</Button>                                                                                           
-                                                                                        </>
-                                                                                }
-                                                                            </Card.Body>
-                                                                    ))
-                                                                    }
-                                                                </Accordion.Body>
-                                                            }
-                                                        
-                                                    </Accordion.Item>
-                                                ))
+                                                <SubmissionItem submissions={userSubmissions} user={user} handleModeration={moderate}/>
                                                 :
                                                 <p>No submissions yet for this course</p>
                                             }
                                         </Accordion>
-                                    } 
+                                      ):
+                                    <Loader/>
+                                }
                                 </Card.Body>
                         </Card>                         
                     }   
@@ -183,20 +152,21 @@ const Submission = ({user}) => {
                 }
             </div>
             
-            <ToastContainer className="p-3" position='middle-center'>
+            {/* <ToastContainer className="p-3" position='middle-center'>
                 <Toast show={showSubmissionSuccess} onClose={() => setShowSubmissionSuccess(!showSubmissionSuccess)}>
                     <Toast.Header>                    
                     <strong className="me-auto"> Congrats on submitting your solution 🚀🚀 </strong>
                     </Toast.Header>
                     <Toast.Body>Successfully submitted solution to quest: {course.courseTitle}</Toast.Body>
                 </Toast>
+
                 <Toast show={showModerationSuccess} onClose={()=> setShowModerationSuccess(!showModerationSuccess)}>
                     <Toast.Header>                    
                     <strong className="me-auto">Great job on the review🙌</strong>
                     </Toast.Header>
                     <Toast.Body>Evaluation successfully Recorded</Toast.Body>
                 </Toast>
-                </ToastContainer>
+            </ToastContainer> */}
             
     </div>
         

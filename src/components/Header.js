@@ -49,7 +49,7 @@ const Header = ({user, login}) => {
                     }}
                     >
                     {user.username} 
-                    <Badge className='ms-2'>{user.reward}</Badge>
+                    <Badge className='ms-2'>{user.level}</Badge>
                 </Button> 
                 :
                 <Button variant="outline-primary"

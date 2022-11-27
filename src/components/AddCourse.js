@@ -141,7 +141,7 @@ const AddCourse = ({addCourse}) => {
                         </Modal.Body>
                         <Modal.Footer>
                         <Button variant="primary"                        
-                            disable = {!isFormValid()}
+                            disabled = {!isFormValid}
                             onClick = {() => {
                                 addCourse({ title,
                                             level,

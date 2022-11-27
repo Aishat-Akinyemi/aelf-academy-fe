@@ -1,57 +1,50 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button, Stack,  Form, Card,  Accordion, Badge, Modal, Spinner} from 'react-bootstrap';
 import AddCourse from '../components/AddCourse'
 import { useNavigate} from 'react-router-dom';
-import { addLearner, addCourse, getLearnerSubmission} from '../utils/Aelf';
+import { addLearner, addCourse, getLearnerSubmission, getAllCourses} from '../utils/Aelf';
 import Loader from '../components/Loader';
+import { toast } from 'react-toastify';
+import { NotificationSuccess, NotificationError } from '../components/Notification';
 import {uploadDataToIpfs} from '../utils/Ipfs';
 
 const Account = ({user, getUser}) => {
     let navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(user);
-    const [submissionList, setSubmissionList] = useState(learnerSubmissionList);
-    const [courses, setCourses]  =useState(courseList);
+    const [submissionList, setSubmissionList] = useState([]);
+    const [courses, setCourses]  =useState([]);
     const [show, setShow] = useState(() => () => user!==null);
     const [username, setUsername] = useState(''); 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true); 
     const [loading, setLoading] = useState(false);   
 
-    const addNewCourse = (data) => {
-        try {  
-            
-            uploadDataToIpfs(data).then((resp) => {
-                setLoading(true);
-                const newCourseData = {
-                    submissionReward: data.submissionReward,
-                    moderationReward: data.moderationReward,
-                    level : data.level,
-                    contentUrl: resp,
-                    courseTitle : data.title,                    
-                }
-                const courseAdded = addCourse(newCourseData).then(
-                    (res) => {
-                        console.log(res);
-                        setLoading(false);
-                    },
-                    (error) => {
-                        console.log(error)
-                        setLoading(false);
-                    }
-                )                
-              //then handle submission with addCall
-            });
-            // toast(<NotificationSuccess text="Meme added successfully." />);
-          } catch (error) {
-            // toast(<NotificationError text="Failed to create a meme." />);
+    const addNewCourse = async (data) => {
+        try {
+            setLoading(true);
+            toast(<NotificationSuccess text="Adding course..."/>)
+            const ipfsUrl = await uploadDataToIpfs(data);
+            const newCourseData = {
+                            submissionReward: data.submissionReward,
+                            moderationReward: data.moderationReward,
+                            level : data.level,
+                            contentUrl: ipfsUrl,
+                            courseTitle : data.title,                    
+            };
+            await addCourse(newCourseData);          
+            toast.success(<NotificationSuccess text="Course Added successfully"/>)
+        } catch(e) {          
+            console.log(e);
+            toast.error(<NotificationError text={` Error adding course.  ${e}`}/>)            
+        } finally {
             setLoading(false);
-          } finally {            
-            setLoading(false);
-          }
+        }         
     }
 
     const handleAddLearner =  () => { 
         try{
+            setLoading(true);
+            toast(<NotificationSuccess text="Registering leaner..."/>)
             (addLearner(username)).then(
                 (res) => {                                       
                     console.log(`added user from account, ${res}`);
@@ -74,13 +67,61 @@ const Account = ({user, getUser}) => {
         
     }
 
-    // const getSubmission = async () => { 
-    //     const result = await getLearnerSubmission(userAddress);
-    //     console.log(result);
-    //     console.log(result.submissions.submissions.list);
-    //     // let sub = submission.submissions.find( e => e.courseId == courseId).submissions.list;             
+    // const handleAddLearner =  async () => { 
+    //     try{
+    //         setLoading(true);
+    //         toast(<NotificationSuccess text="Registering learner..."/>)
+    //         await addLearner(username);
+
+    //         (addLearner(username)).then(
+    //             (res) => {                                       
+    //                 console.log(`added user from account, ${res}`);
+    //             },
+    //             (error) => {}
+    //         ).catch(
+    //             (err) => {
+    //                 console.log(err)
+    //             } 
+    //         ).finally(
+    //             () => {
+    //                 getUser()
+    //                 handleClose();                       
+    //                 navigate("/home"); 
+    //             }
+    //         )            
+    //       } catch(e){
+    //         console.log(e) 
+    //       }  finally {
+            
+    //       } 
         
     // }
+
+    const getSubmission = async () => {
+            try { 
+                 setLoading(true);
+                 const submission = await getLearnerSubmission(user.address);     
+                 setSubmissionList(submission.submissions);
+             } catch (error) {
+             } finally {
+                 setLoading(false);
+             }        
+    }
+    const getCourses = async () => {
+        try {
+            setLoading(true);
+            const courses = await getAllCourses();
+            setCourses(courses);
+        } catch (error) {
+        } finally {
+             setLoading(false);
+         } 
+    }
+
+    useEffect(() => {     
+        getSubmission();  
+        getCourses();      
+    }, [user]); 
 
 
     return (
@@ -102,43 +143,40 @@ const Account = ({user, getUser}) => {
                                             <Card.Header>
                                                 Quests Submission History 
                                             </Card.Header>
-                                            <Card.Body>
-                                                {/* //userSubmissions? */}
+                                            <Card.Body>                                              
                                                 {
-                                                    
+                                                  (submissionList.length >0 && courses.length>0) ?
                                                     <Accordion>
-                                                        {
-                                                            submissionList.map((courseSubmission, i)=> ( 
+                                                         {
+                                                            submissionList.map((courseSubmission, i) => ( 
                                                                 <Accordion.Item eventKey={i} key={i}>
                                                                     <Accordion.Header className='d-flex'>
-                                                                        <span className='me-auto bd-highlight'>Course: {courses.find(c => c.CourseId === courseSubmission.courseId).CourseTitle}</span>
-                                                                        {courseSubmission.submissions[ courseSubmission.submissions.length - 1].isApproved 
+                                                                        <span className='me-auto bd-highlight'>Course: {courses.find(c => c.courseId == courseSubmission.courseId).courseTitle}</span>
+                                                                        {courseSubmission.submissions.list[ courseSubmission.submissions.list.length - 1].isApproved 
                                                                             &&   <span className='sm-txt'>
-                                                                                    <span className='me-3'> Moderated by <h5 className='in-line ms-3'><Badge bg="primary">{courseSubmission.submissions[courseSubmission.submissions.length - 1].moderatorUsernam}</Badge></h5> </span> 
-                                                                                    <span> Reward<h5 className='in-line ms-3'><Badge bg="primary"> {courses.find(c => c.CourseId === courseSubmission.courseId).SubmissionReward} </Badge></h5></span>
+                                                                                    <span className='me-3'> Moderated by <h5 className='in-line ms-3'><Badge bg="primary">{courseSubmission.submissions.list[courseSubmission.submissions.list.length - 1].moderatedBy}</Badge></h5> </span> 
+                                                                                    <span> Reward<h5 className='in-line ms-3'><Badge bg="primary"> {courses.find(c => c.courseId === courseSubmission.courseId).submissionReward} </Badge></h5></span>
                                                                                 </span>
                                                                         } 
                                                                     </Accordion.Header>
                                                                         {
                                                                             <Accordion.Body>
                                                                                 {
-                                                                                    courseSubmission.submissions.map((s, x) => (                                                                    
+                                                                                    courseSubmission.submissions.list.map((s, x) => (                                                                    
                                                                                         <Card.Body key={x} className="d-flex"> 
                                                                                             <a href={s.submissionUrl} target="_blank" rel="noopener noreferrer" className='me-auto bd-highlight'>View Submission</a>
                                                                                                                                                                                                                                 
                                                                                             {
-                                                                                                s.moderatedBy!=='' 
+                                                                                                s.moderatedBy 
                                                                                                 ? 
                                                                                                 <span className='sm-txt'>
                                                                                                     <span className='me-3'>
-                                                                                                        Moderated by {s.moderatorUsernam}
+                                                                                                        Moderated by {s.moderatedBy}
                                                                                                     </span>
                                                                                                     <span >
                                                                                                         {s.isApproved ? 'Quest Approved': 'Not Approved'}
-                                                                                                    </span>
-                                                                                                        
-                                                                                                </span>                                                                                  
-                                                                                                
+                                                                                                    </span>                                                                                                        
+                                                                                                </span>
                                                                                                 : <span className='sm-txt'>Awaiting Review</span>  
                                                                                             
                                                                                             }
@@ -149,9 +187,10 @@ const Account = ({user, getUser}) => {
                                                                         }
                                                                     
                                                                 </Accordion.Item>
-                                                            ))
-                                                        }
+                                                             ))
+                                                            }
                                                     </Accordion>
+                                                    : <div className="mlm mrm mbm pb-5"><p>You have not yet submitted any quests.</p></div>
                                                 } 
                                             </Card.Body>
                                     </Card>
@@ -214,100 +253,3 @@ const Account = ({user, getUser}) => {
 export default Account
 
 
-
-const learnerSubmissionList= [
-    {
-        courseId: 1,
-        submissions: [
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn',
-                moderatorUsernam: "Moderator 1",
-                isApproved : false
-            },
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn',
-                moderatorUsernam: "Moderator 2",
-                isApproved : false
-                
-            },
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: "2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQn",
-                moderatorUsernam: "Moderator 1",
-                isApproved : false
-            },
-        ]
-    },
-    {
-        courseId: 2,
-        submissions: [
-            {
-                submissionUrl: 'https://github.com/bradtraversy/react-crash-2021',
-                moderatedBy: '2qrgUV4BxGUfUYxpikxVGKFHxgv38qq2o2b3vJrD2Bj29LHqQnxdgsjks45738339v',
-                moderatorUsernam: "Moderator 1",
-                isApproved : false
-            }            
-        ]
-        
-    }
-]
-
-
-const courseList =     [
-    {
-        CourseId : 1,
-        SubmissionReward : 50,
-        ModerationReward : 20,
-        Level : 1,
-        ContentUrl : '',
-        IsActive : true,
-        CourseTitle: 'AELF 101: Getting Started with AElf'
-    },
-    {
-        CourseId : 2,
-        SubmissionReward : 100,
-        ModerationReward : 30,
-        Level : 2,
-        ContentUrl : '',
-        IsActive : true,
-        CourseTitle: 'AELF 201: Aelf Architecture'
-    },
-    {
-        CourseId : 3,
-        SubmissionReward : 200,
-        ModerationReward : 70,
-        Level : 3,
-        ContentUrl : '',
-        IsActive : true,
-        CourseTitle: 'AELF 301: Build and deploy Hello World smart contract'
-    },
-    {
-        CourseId : 4,
-        SubmissionReward : 200,
-        ModerationReward : 70,
-        Level : 4,
-        ContentUrl : '',
-        IsActive : true,
-        CourseTitle: 'AELF 401: Advanced smart contract development'
-    },
-    {
-        CourseId : 5,
-        SubmissionReward : 150,
-        ModerationReward : 40,
-        Level : 5,
-        ContentUrl : '',
-        IsActive : true,
-        CourseTitle: 'AELF 501: Integrate smartcontract with Frontend'
-    },
-    {
-        CourseId : 6,
-        SubmissionReward : 150,
-        ModerationReward : 40,
-        Level : 6,
-        ContentUrl : '',
-        IsActive : true,
-        CourseTitle: 'AELF 601: Smart contract security and optimisation',
-    }       
-]

@@ -24,7 +24,7 @@ function environment(env) {
             return {
                 networkId: "local",
                 nodeUrl: "http://127.0.0.1:1235",
-                contractAddress: CONTRACT_ADDRESS,
+                contractAddress: '2WHXRoLRjbUTDQsuqR5CntygVfnDb125qdJkudev4kVNbLhTdG',
                 explorerUrl: "https://explorer.aelf.io/",
                 defaultPrivateKey: DEFAULT_PRIV_KEY,
                 defaultAddress: DEFAULT_ADDRESS,

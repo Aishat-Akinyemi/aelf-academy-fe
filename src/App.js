@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { Routes, Route, useNavigate} from 'react-router-dom';
 
@@ -11,6 +12,7 @@ import Courses from './Pages/Courses';
 import Quest from './Pages/Quest';
 import Account from './Pages/Account';
 import Submission from './Pages/Submission'
+import {Notification} from './components/Notification'
 
 import { login, getAcademyInfo, getUserInfo, addLearner, getAllCourses} from './utils/Aelf';
 
@@ -40,6 +42,7 @@ function App() {
             }
           },
           (err) => {
+            console.log(err)
               alert(err.Message)
           })          
     } catch(e){ 
@@ -64,6 +67,7 @@ function App() {
  
   return (
     <>
+        <Notification/>
         <Header login={loginUser} user={user}/>
         <Routes>
             <Route path='/' element={<Home user={user}/>}/>

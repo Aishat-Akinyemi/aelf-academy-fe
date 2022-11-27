@@ -2,6 +2,7 @@ import environment from './config';
 import {fetchDataFromIpfs} from './Ipfs'
 
 const aelfEnv = environment("tdvw");
+// const aelfEnv = environment("tdvw");
 const defaultPrivateKey = aelfEnv.defaultPrivateKey;
 const endpoint = aelfEnv.nodeUrl;
 
@@ -54,6 +55,25 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
   
 });
 
+// const getNightaelfInstance = () => {          
+//     setTimeout(async () => {
+//       const result = await getNightly();  
+//       if(result) {
+//         const aelf = new window.NightElf.AElf({
+//           // Enter your test address in this location
+//           httpProvider: [
+//             endpoint
+//           ],
+//           appName
+//         });      
+//         return (aelf);
+//       }   
+//       console.log(`not found`);
+//       throw new Error('timeout / can not find NightElf / please install the extension');
+//     }, 3000);
+// }
+
+
 
   export function login() {     
       return new Promise((resolve, reject) => {
@@ -86,7 +106,7 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
                   }, (err, result) => {
                     const wallet = JSON.parse(result.detail);
                     if (!wallet) {
-                      reject({Message: 'Click Login to connect wallet to Aelf Academy'})
+                      reject({Message: 'Click Login to connect wallet to Aelf Academy'});
                     }                
                     aelf.chain.contractAt(
                       aelfEnv.contractAddress,
@@ -107,6 +127,43 @@ const getNightaelfInstance =  new Promise((resolve, reject) => {
         }
       })      
     } 
+
+// export async function login() {
+//     try{
+//       const aelf = await getNightaelfInstance();
+//       const chainStatus = await aelf.chain.getChainStatus();
+//       if(chainStatus.error!==0){
+//         throw Error('Error connecting to chain.');
+//       }
+//       const chainId =  result.result.ChainId;
+//       if (!chainId) {            
+//         throw Error('Error connecting to chain.');
+//       }
+//       const result = await aelf.login({ appName,
+//                                         chainId: chainId,
+//                                         payload: {
+//                                           method: 'LOGIN',
+//                                           contracts: [{
+//                                             chainId: chainId,
+//                                             contractAddress: aelfEnv.contractAddress,
+//                                             contractName: aelfEnv.contractName,
+//                                             description: 'AelfAcademy smartcontract',
+//                                             github: ''
+//                                           }]
+//                                         }
+//                                       });
+//       const wallet = JSON.parse(result.detail);
+//       if (!wallet) {
+//         throw Error('Click Login to connect wallet to Aelf Academy');
+//       }                
+//       const contract = aelf.chain.contractAt(aelfEnv.contractAddress, wallet);
+//       window.Contract = contract;
+//       return wallet.address;
+//     } catch(e) {
+//         throw Error("Please install Aelf Extension and try again");
+//     }
+           
+// } 
   
 
   export function loginOriginal() {
@@ -177,7 +234,7 @@ export async function addLearner(username){
       }, (error, result) => {
         if(result.error!==0) {
           const message = result.errorMessage.message;
-            return reject({
+            reject({
               Message: message}
             );
         } else {
@@ -206,34 +263,78 @@ export async function addLearner(username){
  * or a rejected promise containing the error message
  * @type {(courseInput: {submissionReward: number, moderationReward: number, level: number, contentUrl: string, courseTitle: string})}
  */
+// export async function addCourse(courseInput){
+//   if (!window.Contract) {
+//     alert('not yet initialized');
+//     return;
+//   } 
+//   const aelf = await getNightaelfInstance;
+//   return new Promise((resolve, reject) => {
+//     window.Contract.AddCourse(courseInput)
+//       .then(result=> {
+//         if(result.error!==0) {
+//           const message = {Message: result.errorMessage.message};
+//           return reject(message);
+//         } else {            
+//             const txId = result.result.TransactionId;
+//             return aelf.chain.getTxResult(txId)         
+//         }
+//     }).then((result) => {
+//       setTimeout(() => {
+//         if(result.error!==0) {
+//           const message = result.errorMessage.message;
+//           let err = {
+//             Message: message}
+//             return reject(err);                 
+//         }
+//         if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){            
+//            return reject("Action failed!");          
+//         } 
+//         else {
+//           const {Status, Logs} =  result.result
+//           return resolve({Status, Logs});             
+//         }
+//       }, 3000)
+//     })
+//   })  
+// }
+
 export async function addCourse(courseInput){
   if (!window.Contract) {
     alert('not yet initialized');
     return;
-  }
-  try{
-    return new  Promise((resolve, reject) => {
-      window.Contract.AddCourse(courseInput, 
-        (error, result) => {
-        if(result.error!==0) {
-          const message = result.errorMessage.message;
-            return reject({
-              Message: message}
-            );
-        } else {
-          try {
-            const txId = result.result.TransactionId;
-            resolve(getResult(txId));
-          } catch(e){
-              reject(e)
-          }
-        }
-      });
-    })
-  } catch(e){
-      return e
-  }
+  } 
+  const aelf = await getNightaelfInstance;
+  const result = await window.Contract.AddCourse(courseInput);
+  if(result.error!==0) {
+    const message = {Message: result.errorMessage.message};
+    throw Error(message);
+  }  
+  return await getResul(result.result.TransactionId);        
+   
 }
+
+export async function getResul(txId){
+  const aelf = await getNightaelfInstance;
+  const result = await aelf.chain.getTxResult(txId)
+  if(result.error!==0) {
+    const message = result.errorMessage.message;
+    // let err = {
+    //   Message: message}
+    throw Error(message);                 
+  }
+  if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){            
+    throw Error("Action failed!");          
+  } 
+  else {
+    const {Status, Logs} =  result.result
+    return ({Status, Logs});             
+  } 
+  // setTimeout(() => {
+    
+  // }, 3000)
+  }
+
 
 /**
  * Adds a chief moderator
@@ -345,39 +446,57 @@ export async function addAdmin(addUserInput){
 
 /**
  * Moderate  a learner's submission to a quest
- * @param {{courseId: number, learnerId : number, isApproved : bool}} moderateChallengeInput  
+ * @param {{courseId: number, learnerId : string, isApproved : bool}} moderateChallengeInput  
  * @returns {Promise} a resolved promise containing the status of the transaction and the logs
  * or a rejected promise containing the error message
- * @type {(moderateChallengeInput: {courseId: number, learnerId : number, isApproved : bool} => Promise)}
+ * @type {(moderateChallengeInput: {courseId: number, learnerId : string, isApproved : bool} => Promise)}
  */
- export async function moderateChallenge(moderateChallengeInput){
+//  export async function moderateChallenge(moderateChallengeInput){
+//   if (!window.Contract) {
+//     alert('not yet initialized');
+//     return;
+//   }
+//   try{
+//     return new  Promise((resolve, reject) => {
+//       window.Contract.ModerateChallenge(moderateChallengeInput, 
+//         (error, result) => {
+//         if(result.error!==0) {
+//           const message = result.errorMessage.message;
+//             return reject({
+//               Message: message}
+//             );
+//         } else {
+//           try {
+//             // const txId = result.result.TransactionId;
+//             // resolve(getResult(txId));
+//             const txId = result.result.TransactionId;
+//             getResult(txId).then(
+//               (res) =>  resolve(res),
+//               (err) => reject(err)
+//             )
+//           } catch(e){
+//               reject(e)
+//           }
+//         }
+//       });
+//     })
+//   } catch(e){
+//       return e
+//   }
+// }
+export async function moderateChallenge(moderateChallengeInput){
   if (!window.Contract) {
     alert('not yet initialized');
     return;
-  }
-  try{
-    return new  Promise((resolve, reject) => {
-      window.Contract.ModerateChallenge(moderateChallengeInput, 
-        (error, result) => {
-        if(result.error!==0) {
-          const message = result.errorMessage.message;
-            return reject({
-              Message: message}
-            );
-        } else {
-          try {
-            const txId = result.result.TransactionId;
-            resolve(getResult(txId));
-          } catch(e){
-              reject(e)
-          }
-        }
-      });
-    })
-  } catch(e){
-      return e
-  }
+  }  
+  const result = await window.Contract.ModerateChallenge(moderateChallengeInput);  
+  if(result.error!==0) {
+      const message = result.errorMessage.message;
+        throw new Error (message);
+  } 
+  return await getResul(result.result.TransactionId);    
 }
+
 
 /**
  * Handles donation of fund to the academy
@@ -416,37 +535,61 @@ export async function addAdmin(addUserInput){
   }
 }
 
+// export async function getResult(txId){ 
+    
+//       const aelf = await getNightaelfInstance;
+//       setTimeout(() => {
+//         return new Promise((resolve, reject) => {
+//         try{
+//           aelf.chain.getTxResult(txId, (err, result) => {
+//             console.log(result);
+//           if(result.error!==0) {
+//               const message = result.errorMessage.message;
+//                 return reject({
+//                   Message: message}
+//                 );                 
+//             }
+//            else if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){
+//                return reject("Action failed!");          
+//             } 
+//             else {
+//               const {Status, Logs} =  result.result
+//                return resolve({Status, Logs});             
+//             }
+//           });
+//         } catch(e) {
+//           alert(e);
+//         }
+//         })
 
+//       }, 1000);
+// }
 
-
-
-export async function getResult(txId){ 
-    try{
-      const aelf = await getNightaelfInstance;
-      setTimeout(() => {
-        return new Promise((resolve, reject) => {
-          aelf.chain.getTxResult(txId, (err, result) => {
-            if(result.error!==0){
-              const message = result.errorMessage.message;
-                return reject({
-                  Message: message}
-                );
-            }
-            if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){
-              return reject("Action failed!");            
-            } 
-            else {
-              const {Status, Logs} =  result.result
-              return resolve({Status, Logs});
-            }
-          });
-        })
-      }, 1000);
-
-    } catch(e) {
-      alert(e);
-    }
+export async function getResult(txId){    
+  const aelf = await getNightaelfInstance;
+  setTimeout(() => {
+    return new Promise((resolve, reject) => {   
+      aelf.chain.getTxResult(txId)
+        .then(result => {
+          if(result.error!==0) {
+            const message = result.errorMessage.message;
+            let err = {
+              Message: message}
+              return reject(err);                 
+          }
+          if(result.result.Status==='NOTEXISTED' && result.result.Transaction === null){            
+             return reject("Action failed!");          
+          } 
+          else {
+            const {Status, Logs} =  result.result
+            return resolve({Status, Logs});             
+          }
+        });  
+    });
+  }, 1000)
 }
+
+
 
 export function getAcademyInfo() {
   if (!window.Contract) {
