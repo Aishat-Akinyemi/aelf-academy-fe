@@ -1,15 +1,12 @@
 import {Button} from 'react-bootstrap';
 import displayImg from '../assets/img/person-programming.png';
 import aelfLogo from '../assets/img/aelfLogo.png';
-import {useNavigate} from 'react-router-dom';
 
-const About = ({user}) => {
-    let navigate = useNavigate();
+const About = ({user, login}) => {
     const handleStartLearning = () => {
         if(user==null){
-            return alert("Please Login with the Aelf browser Extension to start learning")
-        }
-        navigate("/courses");
+            login();
+        }       
     }
 
   return (

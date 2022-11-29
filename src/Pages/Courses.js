@@ -2,7 +2,6 @@ import Course from "../components/Course";
 import Loader from "../components/Loader";
 import { Row, Button } from 'react-bootstrap';
 import React, { useState, useEffect, useCallback } from "react";
-import { toast } from "react-toastify";
 
 import { getAllCourses} from '../utils/Aelf';
 
