@@ -1,3 +1,4 @@
+import logo from './logo.svg';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
@@ -23,7 +24,6 @@ function App() {
 
   const  loginUser = () => {
     try{
-        
         login().then(
          async (res) => {
             if(res){
@@ -71,7 +71,7 @@ function App() {
         <Notification/>
         <Header login={loginUser} user={user}/>
         <Routes>
-            <Route path='/' element={<Home user={user} login={loginUser}/>}/>
+            <Route path='/' element={<Home user={user}/>}/>
             <Route path='/courses' element={<Courses user={user}/>}/>
             <Route path='/course/:courseId' element={<Coursedetails/>}/>            
             <Route path='/quest/:courseId' element={<Quest user={user}/>}/>

@@ -2,10 +2,10 @@ import React from 'react'
 import About from '../components/About';
 import Faq from '../components/Faq'
 
-const Home = ({user, login}) => {
+const Home = ({user}) => {
   return (
     <div>
-      <About user={user} login={login}/>
+      <About user={user}/>
       <Faq/>
     </div>
   )
