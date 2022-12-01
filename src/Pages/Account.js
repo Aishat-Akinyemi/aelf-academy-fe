@@ -8,7 +8,7 @@ import { NotificationSuccess, NotificationError } from '../components/Notificati
 import {uploadDataToIpfs} from '../utils/Ipfs';
 import { toast } from 'react-toastify';
 
-const Account = ({user, getuser}) => {
+const Account = ({user}) => {
     let navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(user);
     const [submissionList, setSubmissionList] = useState([]);

@@ -78,7 +78,7 @@ function App() {
             <Route path='/courses' element={<Courses user={user}/>}/>
             <Route path='/course/:courseId' element={<Coursedetails/>}/>            
             <Route path='/quest/:courseId' element={<Quest user={user}/>}/>
-            <Route path='/account' element={<Account user={user} getuser={getUserDetails}/>}/>
+            <Route path='/account' element={<Account user={user}/>}/>
             <Route path='/entries/:courseId' element={<Submission user={user} />}/>
             {/* <Route path='/' element={}/> */}
             <Route path='*' element={<Home/>}/>
