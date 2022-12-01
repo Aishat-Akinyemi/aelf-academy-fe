@@ -22,7 +22,9 @@ const Account = ({user}) => {
     const addNewCourse = async (data) => {
         try {
             setLoading(true);
-            toast(<NotificationSuccess text="Adding course..."/>)
+            toast(<NotificationSuccess text="Adding course..."/>, {
+                autoClose: 5000
+            });
             const ipfsUrl = await uploadDataToIpfs(data);
             const newCourseData = {
                             submissionReward: data.submissionReward,
@@ -46,7 +48,7 @@ const Account = ({user}) => {
             toast(<NotificationSuccess text="Registering leaner..."/>);
             (addLearner(username)).then(
                 (res) => {                                       
-                    toast.success(<NotificationSuccess text="Learner registeres successfully. You may now login"/>);
+                    toast.success(<NotificationSuccess text="Learner registered successfully. You may now login"/>);
                 },
                 (error) => {}
             ).catch(

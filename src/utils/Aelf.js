@@ -579,7 +579,7 @@ export async function getAllCourses() {
               introduction: dataFromIpfs.data.introduction,
               toc: dataFromIpfs.data.toc,
               challengeDescription: dataFromIpfs.data.challengeDescription,
-              content: dataFromIpfs.data.challengeDescription,
+              content: dataFromIpfs.data.content,
               courseTitle: course.courseTitle ,
             }  
             if(course.courseId ==='3'){
