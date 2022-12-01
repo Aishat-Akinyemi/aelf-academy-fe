@@ -568,12 +568,7 @@ export async function getAllCourses() {
     const courseList = [];
     const result = await window.Contract.GetCourses.call();
     const courses = result.result.courseList;
-    courses.forEach(course => {
-      if(course.courseId === '1' | course.courseId === '3'| course.courseId ==='5') {
-        if(course.courseId==='1'){
-          //correct error I committed during testing, TODO remember to remove after deploying a new contract
-          course.contenturl = 'https://ipfs.io/ipfs/QmWeN3ttqoXJCPttynVBpZa3QE1e5TR9wuFqjPH6K99cSU';
-        }       
+    courses.forEach(course => {           
           const courseItem = new Promise(async (resolve) => {
             const dataFromIpfs = await fetchDataFromIpfs(course.contenturl);
             const finalCourseObj= {
@@ -593,7 +588,7 @@ export async function getAllCourses() {
             resolve(finalCourseObj);
           });
           courseList.push(courseItem);
-      }      
+            
     });
     return Promise.all(courseList);
    

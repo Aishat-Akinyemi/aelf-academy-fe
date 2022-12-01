@@ -13,6 +13,8 @@ import Quest from './Pages/Quest';
 import Account from './Pages/Account';
 import Submission from './Pages/Submission'
 import {Notification} from './components/Notification'
+import { toast } from 'react-toastify';
+import { NotificationSuccess } from './components/Notification';
 
 import { login, getUserInfo, getAllCourses} from './utils/Aelf';
 
@@ -24,6 +26,7 @@ function App() {
 
   const  loginUser = () => {
     try{
+       toast(<NotificationSuccess text="Loading..."/>)
         login().then(
          async (res) => {
             if(res){
@@ -75,7 +78,7 @@ function App() {
             <Route path='/courses' element={<Courses user={user}/>}/>
             <Route path='/course/:courseId' element={<Coursedetails/>}/>            
             <Route path='/quest/:courseId' element={<Quest user={user}/>}/>
-            <Route path='/account' element={<Account user={user} getUser={getUserDetails}/>}/>
+            <Route path='/account' element={<Account user={user} getuser={getUserDetails}/>}/>
             <Route path='/entries/:courseId' element={<Submission user={user} />}/>
             {/* <Route path='/' element={}/> */}
             <Route path='*' element={<Home/>}/>

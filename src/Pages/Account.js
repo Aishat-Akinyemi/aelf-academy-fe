@@ -4,11 +4,11 @@ import AddCourse from '../components/AddCourse'
 import { useNavigate} from 'react-router-dom';
 import { addLearner, addCourse, getLearnerSubmission, getAllCourses} from '../utils/Aelf';
 import Loader from '../components/Loader';
-import { toast } from 'react-toastify';
 import { NotificationSuccess, NotificationError } from '../components/Notification';
 import {uploadDataToIpfs} from '../utils/Ipfs';
+import { toast } from 'react-toastify';
 
-const Account = ({user, getUser}) => {
+const Account = ({user, getuser}) => {
     let navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(user);
     const [submissionList, setSubmissionList] = useState([]);
@@ -43,26 +43,27 @@ const Account = ({user, getUser}) => {
     const handleAddLearner =  () => { 
         try{
             setLoading(true);
-            toast(<NotificationSuccess text="Registering leaner..."/>)
+            toast(<NotificationSuccess text="Registering leaner..."/>);
             (addLearner(username)).then(
                 (res) => {                                       
-                    console.log(`added user from account, ${res}`);
+                    toast.success(<NotificationSuccess text="Learner registeres successfully. You may now login"/>);
                 },
                 (error) => {}
             ).catch(
                 (err) => {
-                    console.log(err)
+                    toast.error(<NotificationError text="Error Registering Learner. Please try again"/>);
                 } 
             ).finally(
-                () => {
-                    getUser()
+                () => {                    
                     handleClose();                       
                     navigate("/home"); 
                 }
             )            
           } catch(e){
             console.log(e) 
-          }   
+          }  finally {
+            setLoading(false);
+          } 
         
     }
 

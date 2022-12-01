@@ -22,7 +22,7 @@ const Quest = ({user}) => {
             <Stack direction="horizontal" gap={3} className="col-6 mx-auto justify-content-around"> 
                 <Button variant="outline-primary"
                 onClick={() => {
-                  navigate(`/course/${coursedetails.courseId}`);
+                  navigate(`/course/${coursedetails.courseId}`, {state: coursedetails});
                   }}
                 >Go back to Course</Button>
                 <Button variant="primary"
